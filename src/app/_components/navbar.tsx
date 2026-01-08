@@ -38,8 +38,8 @@ export default function Navbar() {
 
   // Background opacity: starts at 0.05 (95% transparent), goes to 1 (opaque)
   const bgOpacity = blurRoutes.includes(usePathname())
-    ? 0.05 + transparency * 0.95
-    : 0.95;
+    ? 0.05 + transparency * 0.5
+    : 0.5;
 
   return (
     <nav
@@ -80,9 +80,9 @@ function NavLinks({ bgOpacity }: { bgOpacity: number }) {
     { href: "/contact", label: "Contact" },
   ];
 
-  const borderStyle =
+  const opacityBasedStyle =
     bgOpacity < 0.4
-      ? clsx("border-accent-foreground/14")
+      ? clsx("border-accent-foreground/14 backdrop-blur-sm")
       : clsx("border-transparent");
 
   return (
@@ -95,8 +95,8 @@ function NavLinks({ bgOpacity }: { bgOpacity: number }) {
               <NavigationMenuLink
                 asChild
                 className={cn(
-                  "hover:bg-accent-foreground/14 active:bg-accent-foreground/14 focus:bg-accent-foreground/14 border bg-clip-padding px-4 backdrop-blur-sm transition-[border] duration-300 ease-linear",
-                  borderStyle,
+                  "hover:bg-accent-foreground/14 active:bg-accent-foreground/14 focus:bg-accent-foreground/14 border bg-clip-padding px-4 transition-[border] duration-300 ease-linear text-shadow-lg/30",
+                  opacityBasedStyle,
                   isActive &&
                     "bg-accent-foreground/14 border-accent-foreground/14",
                 )}

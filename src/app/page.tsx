@@ -1,8 +1,10 @@
 import { Typography } from "@/app/_components/typography";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import clsx from "clsx";
 import { Brain, Calendar, MapPin, Trophy, Wrench } from "lucide-react";
 import Image from "next/image";
+import BlobContainer from "./_components/blob-container";
 import { Container } from "./_components/container";
 import { Link } from "./_components/link";
 import { LinkButton } from "./_components/link-button";
@@ -36,8 +38,12 @@ export default function Home() {
         </div>
       </div>
       <Separator className="-mx-4 my-0" />
-      <div className="grid grid-cols-1 items-center justify-items-center gap-4 p-8 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-card/50 flex h-full w-full flex-col items-center justify-baseline px-6 text-center">
+      <BlobContainer
+        className={clsx(
+          "grid grid-cols-1 items-center justify-items-center gap-4 p-8 sm:grid-cols-2 lg:grid-cols-4",
+        )}
+      >
+        <Card className="bg-accent-foreground/7 flex h-full w-full flex-col items-center justify-baseline px-6 text-center">
           <Wrench />
           <Typography variant="h3" className="mt-0!">
             Hands-on Experience
@@ -47,7 +53,7 @@ export default function Home() {
             or programming.
           </Typography>
         </Card>
-        <Card className="bg-card/50 flex h-full w-full flex-col items-center justify-baseline px-6 text-center">
+        <Card className="bg-accent-foreground/7 flex h-full w-full flex-col items-center justify-baseline px-6 text-center">
           <Trophy />
           <Typography variant="h3" className="mt-0!">
             Compete in Competitions
@@ -57,7 +63,7 @@ export default function Home() {
             Vex Robotics, and more.
           </Typography>
         </Card>
-        <Card className="bg-card/50 flex h-full w-full flex-col items-center justify-baseline px-6 text-center">
+        <Card className="bg-accent-foreground/7 flex h-full w-full flex-col items-center justify-baseline px-6 text-center">
           <Brain />
           <Typography variant="h3" className="mt-0!">
             Beginner Friendly
@@ -67,7 +73,7 @@ export default function Home() {
             our members are always happy to help out.
           </Typography>
         </Card>
-        <Card className="bg-card/50 flex h-full w-full flex-col items-center justify-baseline px-6 text-center">
+        <Card className="bg-accent-foreground/7 flex h-full w-full flex-col items-center justify-baseline px-6 text-center">
           <Calendar />
           <Typography variant="h3" className="mt-0!">
             Meeting Times
@@ -84,7 +90,7 @@ export default function Home() {
             <Typography className="text-small m-0!">Super Fab Lab</Typography>
           </Link>
         </Card>
-      </div>
+      </BlobContainer>
       <Container className="mt-4 space-y-4">
         <Typography variant="h1">Who We Are</Typography>
         <Typography>
