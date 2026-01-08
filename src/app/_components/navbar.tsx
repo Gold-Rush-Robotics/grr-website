@@ -5,31 +5,71 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import clsx from "clsx";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
+  const [transparency, setTransparency] = useState(0.3);
+  const [blurAmount, setBlurAmount] = useState(0.1);
+
+  const blurRoutes = ["/"];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+
+      const alpha = Math.max(0.1, Math.min(1, scrollY / 500));
+      setTransparency(alpha);
+      const blurIntensity = Math.max(0.3, Math.min(1, scrollY / 200));
+      setBlurAmount(blurIntensity * 8); // 0 to 8px blur (backdrop-blur-sm is ~4px, we'll go up to 8px for subtlety)
+    };
+
+    // Set initial state
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Background opacity: starts at 0.05 (95% transparent), goes to 1 (opaque)
+  const bgOpacity = blurRoutes.includes(usePathname())
+    ? 0.05 + transparency * 0.95
+    : 0.95;
+
   return (
-    <nav className="bg-background border-border border-b">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between p-4">
+    <nav
+      className="border-border fixed top-0 right-0 left-0 z-50 border-b"
+      style={{
+        backdropFilter: `blur(${blurAmount}px)`,
+        WebkitBackdropFilter: `blur(${blurAmount}px)`,
+      }}
+    >
+      <div
+        className="bg-background absolute inset-0 -z-10"
+        style={{ opacity: bgOpacity }}
+      />
+      <div className="relative mx-auto flex w-full items-center justify-between p-4">
         <Link href="/">
-          <img
-            src="/logo/PNG/Logo_HorizontalMainWhiteText.png"
-            alt="Logo"
+          <Image
+            src="/logo/png/49er-robotics/49er Robotics (Color White).png"
+            alt="49er Robotics Logo"
             width={100}
             height={100}
+            className="drop-shadow-[-10px_4px_15px_rgba(0,0,0,1)]" // Drop shadow to make the logo more readable over hero background
           />
         </Link>
-        <NavLinks />
+        <NavLinks bgOpacity={bgOpacity} />
       </div>
     </nav>
   );
 }
 
-function NavLinks() {
+function NavLinks({ bgOpacity }: { bgOpacity: number }) {
   const pathname = usePathname();
   const links = [
     { href: "/", label: "Home" },
@@ -39,6 +79,11 @@ function NavLinks() {
     { href: "/gallery", label: "Gallery" },
     { href: "/contact", label: "Contact" },
   ];
+
+  const borderStyle =
+    bgOpacity < 0.4
+      ? clsx("border-accent-foreground/14")
+      : clsx("border-transparent");
 
   return (
     <NavigationMenu>
@@ -50,8 +95,10 @@ function NavLinks() {
               <NavigationMenuLink
                 asChild
                 className={cn(
-                  navigationMenuTriggerStyle(),
-                  isActive && "bg-accent text-accent-foreground",
+                  "hover:bg-accent-foreground/14 active:bg-accent-foreground/14 focus:bg-accent-foreground/14 border bg-clip-padding px-4 backdrop-blur-sm transition-[border] duration-300 ease-linear",
+                  borderStyle,
+                  isActive &&
+                    "bg-accent-foreground/14 border-accent-foreground/14",
                 )}
               >
                 <Link href={link.href}>{link.label}</Link>

@@ -1,62 +1,62 @@
+import { Link } from "@/app/_components/link";
+import { Typography } from "@/app/_components/typography";
 import { Separator } from "@/components/ui/separator";
+import { Container } from "../_components/container";
+import SponsorLogo from "../_components/sponsor-logo";
 
 export default function Donate() {
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Donate</h1>
-      <p>
+    <Container className="space-y-6">
+      <Typography variant="h1">Donate</Typography>
+      <Typography variant="p">
         There are many ways to support our club—from becoming a sponsor to
         making a one-time donation.
-      </p>
+      </Typography>
       <Separator />
-      <h2 className="text-xl font-bold">Amazon Affiliate Program</h2>
-      <p>
+      <Typography variant="h2">Amazon Affiliate Program</Typography>
+      <Typography variant="p">
         As an Amazon Associate, we can receive a small commission from Amazon at
         no additional cost to you when you use our Amazon affiliate link and
         then make a normal purchase on Amazon. This can be an easy way to
         support our club without making any direct donations or purchases.
-      </p>
-      <p>
+      </Typography>
+      <Typography variant="p">
         Access Amazon through{" "}
-        <a
-          href="https://amzn.to/4140ZTV"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline"
-        >
-          this link
-        </a>{" "}
-        to support us.
-      </p>
-      <h2 className="text-xl font-bold">Donate or Sponsor Us</h2>
-      <p>
+        <Link href="https://amzn.to/4140ZTV">this link</Link> to support us.
+      </Typography>
+      <Typography variant="h2">Donate or Sponsor Us</Typography>
+      <Typography variant="p">
         As a student branch of a nonprofit 501(c)(3) IEEE, we can accept
         tax-deductible donations from individuals and organizations who are
         passionate about supporting our mission.
-      </p>
-      <p>
+      </Typography>
+      <Typography variant="p">
         IEEE Employee Identification Number (EIN): 13-1656633 <br />
-        <a
-          href="https://www.ieee.org/content/dam/ieee-org/ieee/web/org/voluntr/tax-management/ieee-irs-tax-exempt-letter-05-24-2019.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline"
-        >
+        <Link href="https://www.ieee.org/content/dam/ieee-org/ieee/web/org/voluntr/tax-management/ieee-irs-tax-exempt-letter-05-24-2019.pdf">
           IEEE IRS 501(c)(3) Information
-        </a>
+        </Link>
         <br />
-        <a
-          href="" // TODO: Find updated link
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline"
-        >
-          IEEE IRS W9
-        </a>
-      </p>
+        {/* TODO: Find updated link */}
+        <Link>IEEE IRS W9</Link>
+      </Typography>
       <Separator />
-      <h2 className="text-xl font-bold">We'd like to thank our sponsors!</h2>
-      <p>Onshape, North Carolina Space Grant</p> {/* TODO: images */}
-    </div>
+      <Typography variant="h2">
+        We&apos;d like to thank our sponsors!
+      </Typography>
+      <Typography variant="p">Onshape, North Carolina Space Grant</Typography>{" "}
+      <div className="mt-4 flex flex-row gap-12 [&_img]:h-60 [&_img]:w-auto">
+        <SponsorLogo
+          src="/logo/svg/onshape/light.svg"
+          darkSrc="/logo/svg/onshape/dark.svg"
+          name="Onshape"
+          href="https://onshape.com"
+        />
+        <SponsorLogo
+          src="/logo/png/ncspacegrant/logo.png"
+          name="NC Space Grant"
+          href="https://ncspacegrant.ncsu.edu/"
+        />
+      </div>
+    </Container>
   );
 }
