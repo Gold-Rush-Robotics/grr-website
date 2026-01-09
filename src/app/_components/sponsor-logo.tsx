@@ -4,7 +4,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Image from "next/image";
-import NextLink from "next/link";
 import { Link } from "./link";
 import { Typography } from "./typography";
 
@@ -21,8 +20,9 @@ export default function SponsorLogo({
   href,
 }: SponsorLogoProps) {
   return (
-    <NextLink
+    <Link
       href={href}
+      noArrow
       className="flex w-full flex-none items-center justify-center md:w-[calc(50%-20px)] xl:w-[calc(33.333%-27px)]"
     >
       <Tooltip>
@@ -51,6 +51,6 @@ export default function SponsorLogo({
           </Typography>
         </TooltipContent>
       </Tooltip>
-    </NextLink>
+    </Link>
   );
 }

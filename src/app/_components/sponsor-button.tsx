@@ -42,7 +42,7 @@ export function SponsorButton({
     <Button
       variant={variant}
       onClick={() =>
-        toast.success(
+        toast.info(
           "This functionality is coming soon! For now, please contact us directly at goldrushrobotics@charlotte.edu",
         )
       }

@@ -88,7 +88,7 @@ export default function Donate() {
             href="https://onshape.com/"
           />
           <SponsorLogo
-            src="/logo/png/ncspacegrant/logo.png"
+            src="/logo/png/ncspacegrant.png"
             name="NC Space Grant"
             href="https://ncspacegrant.ncsu.edu/"
           />
