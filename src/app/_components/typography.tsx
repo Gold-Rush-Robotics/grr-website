@@ -89,6 +89,13 @@ function getDefaultElement(
     element = "code";
   } else if (variant === "list") {
     element = "ul";
+  } else if (
+    variant === "muted" ||
+    variant === "lead" ||
+    variant === "large" ||
+    variant === "small"
+  ) {
+    element = "p";
   } else {
     element = (variant ?? "p") as TypographyElement;
   }

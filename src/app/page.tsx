@@ -1,18 +1,19 @@
 import { Typography } from "@/app/_components/typography";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import clsx from "clsx";
 import { Brain, Calendar, MapPin, Trophy, Wrench } from "lucide-react";
 import Image from "next/image";
 import BlobContainer from "./_components/blob-container";
 import { Container } from "./_components/container";
+import Hero from "./_components/hero";
 import { Link } from "./_components/link";
 import { LinkButton } from "./_components/link-button";
+import { SponsorButton } from "./_components/sponsor-button";
 
 export default function Home() {
   return (
     <>
-      <div className="-mt-18 flex min-h-148 items-center justify-center bg-[url('/backgrounds/tyler.png')] bg-cover bg-center bg-no-repeat px-4">
+      <Hero backgroundUrl="/backgrounds/tyler.png">
         <div className="flex flex-col items-center justify-center space-y-8 pt-2">
           <Image
             src="/logo/png/49er-robotics/49er Robotics (Gold White).png"
@@ -31,13 +32,10 @@ export default function Home() {
             <LinkButton href="https://discord.gg/QzhdcbnSzd">
               Discord
             </LinkButton>
-            <LinkButton href="/donate" variant="outline">
-              Sponsor Us
-            </LinkButton>
+            <SponsorButton action="redirect" />
           </div>
         </div>
-      </div>
-      <Separator className="-mx-4 my-0" />
+      </Hero>
       <BlobContainer
         className={clsx(
           "grid grid-cols-1 items-center justify-items-center gap-4 p-8 sm:grid-cols-2 lg:grid-cols-4",

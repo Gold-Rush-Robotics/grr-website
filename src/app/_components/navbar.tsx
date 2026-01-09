@@ -17,7 +17,12 @@ export default function Navbar() {
   const [transparency, setTransparency] = useState(0.3);
   const [blurAmount, setBlurAmount] = useState(0.1);
 
-  const blurRoutes = ["/"];
+  /**
+   * Routes that have a hero background at the top of the page.
+   * Routes in this list will get a different navbar style that
+   * makes the hero content pop out more.
+   */
+  const heroRoutes = ["/", "/donate"];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,7 +42,7 @@ export default function Navbar() {
   }, []);
 
   // Background opacity: starts at 0.05 (95% transparent), goes to 1 (opaque)
-  const bgOpacity = blurRoutes.includes(usePathname())
+  const bgOpacity = heroRoutes.includes(usePathname())
     ? 0.05 + transparency * 0.5
     : 0.5;
 
