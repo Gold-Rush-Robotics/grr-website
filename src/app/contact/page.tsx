@@ -50,6 +50,7 @@ export default async function Contact() {
           />
           <ContactCard
             name="Sylvester Pudelko"
+            pfpPath="/people/sylvester-pudelko.jpg"
             title="Vice President"
             email="spudelko@charlotte.edu"
           />
