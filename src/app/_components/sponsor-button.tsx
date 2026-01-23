@@ -1,7 +1,8 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, type buttonVariants } from "@/components/ui/button";
 import type { VariantProps } from "class-variance-authority";
+import * as React from "react";
 import { toast } from "sonner";
 import { LinkButton } from "./link-button";
 

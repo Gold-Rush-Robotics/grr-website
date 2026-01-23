@@ -25,7 +25,7 @@ export default function Home() {
             variant="h6"
             className="text-muted-foreground max-w-lg text-center font-mono text-xl leading-relaxed font-bold"
           >
-            UNC Charlotte's Premier Robotics Club for students of all skill
+            UNC Charlotte&apos;s Premier Robotics Club for students of all skill
             levels
           </Typography>
           <div className="flex flex-row gap-4">
@@ -47,7 +47,7 @@ export default function Home() {
             Hands-on Experience
           </Typography>
           <Typography variant="muted" className="text-bold">
-            Get real experience—whether it's making CAD models, designing PCBs,
+            Get real experience—whether it&apos;s making CAD models, designing PCBs,
             or programming.
           </Typography>
         </Card>

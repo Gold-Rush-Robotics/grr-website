@@ -20,37 +20,37 @@ export default function TestPage() {
             <div>
               <Typography variant="h1">Heading 1</Typography>
               <code className="text-muted-foreground text-xs">
-                variant="h1"
+                variant=&quot;h1&quot;
               </code>
             </div>
             <div>
               <Typography variant="h2">Heading 2</Typography>
               <code className="text-muted-foreground text-xs">
-                variant="h2"
+                variant=&quot;h2&quot;
               </code>
             </div>
             <div>
               <Typography variant="h3">Heading 3</Typography>
               <code className="text-muted-foreground text-xs">
-                variant="h3"
+                variant=&quot;h3&quot;
               </code>
             </div>
             <div>
               <Typography variant="h4">Heading 4</Typography>
               <code className="text-muted-foreground text-xs">
-                variant="h4"
+                variant=&quot;h4&quot;
               </code>
             </div>
             <div>
               <Typography variant="h5">Heading 5</Typography>
               <code className="text-muted-foreground text-xs">
-                variant="h5"
+                variant=&quot;h5&quot;
               </code>
             </div>
             <div>
               <Typography variant="h6">Heading 6</Typography>
               <code className="text-muted-foreground text-xs">
-                variant="h6"
+                variant=&quot;h6&quot;
               </code>
             </div>
             <div>
@@ -59,26 +59,26 @@ export default function TestPage() {
                 adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
                 dolore magna aliqua.
               </Typography>
-              <code className="text-muted-foreground text-xs">variant="p"</code>
+              <code className="text-muted-foreground text-xs">variant=&quot;p&quot;</code>
             </div>
             <div>
               <Typography variant="lead">
                 This is a lead paragraph with larger text and muted color.
               </Typography>
               <code className="text-muted-foreground text-xs">
-                variant="lead"
+                variant=&quot;lead&quot;
               </code>
             </div>
             <div>
               <Typography variant="large">Large text</Typography>
               <code className="text-muted-foreground text-xs">
-                variant="large"
+                variant=&quot;large&quot;
               </code>
             </div>
             <div>
               <Typography variant="small">Small text</Typography>
               <code className="text-muted-foreground text-xs">
-                variant="small"
+                variant=&quot;small&quot;
               </code>
             </div>
             <div>
@@ -86,21 +86,21 @@ export default function TestPage() {
                 This is muted text for secondary information.
               </Typography>
               <code className="text-muted-foreground text-xs">
-                variant="muted"
+                variant=&quot;muted&quot;
               </code>
             </div>
             <div>
               <Typography variant="blockquote">
-                "This is a blockquote. It has a left border and italic styling."
+                &quot;This is a blockquote. It has a left border and italic styling.&quot;
               </Typography>
               <code className="text-muted-foreground text-xs">
-                variant="blockquote"
+                variant=&quot;blockquote&quot;
               </code>
             </div>
             <div>
-              <Typography variant="code">const example = "code";</Typography>
+              <Typography variant="code">const example = &quot;code&quot;;</Typography>
               <code className="text-muted-foreground text-xs">
-                variant="code"
+                variant=&quot;code&quot;
               </code>
             </div>
             <div>
@@ -109,7 +109,7 @@ export default function TestPage() {
                 example
               </Typography>
               <code className="text-muted-foreground text-xs">
-                variant="inlineCode"
+                variant=&quot;inlineCode&quot;
               </code>
             </div>
             <div>
@@ -119,7 +119,7 @@ export default function TestPage() {
                 <li>List item three</li>
               </Typography>
               <code className="text-muted-foreground text-xs">
-                variant="list"
+                variant=&quot;list&quot;
               </code>
             </div>
           </CardContent>

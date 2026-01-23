@@ -28,7 +28,7 @@ export default async function History() {
       </Typography>
       <Typography variant="p">
         For this event, our team designed a robot capable of retrieving beads
-        from "trees" and storing them in cups or nets, while navigating the
+        from &quot;trees&quot; and storing them in cups or nets, while navigating the
         course and pushing a marshmallow into an alleyway to earn points. Our
         team worked collaboratively to meet these complex challenges, showcasing
         our technical skills and creativity. Despite the difficulties of the

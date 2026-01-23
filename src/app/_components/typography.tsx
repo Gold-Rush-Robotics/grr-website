@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import * as React from "react";
 
-const typographyVariants = cva("", {
+export const typographyVariants = cva("", {
   variants: {
     variant: {
       h1: clsx(
@@ -67,19 +67,20 @@ export interface TypographyProps
   as?: TypographyElement;
 }
 
-const Typography = React.forwardRef<HTMLElement, TypographyProps>(
-  ({ className, variant, as, ...props }, ref) => {
-    const Component = as || getDefaultElement(variant) || "p";
-    return (
-      <Component
-        ref={ref as any}
-        className={clsx(typographyVariants({ variant }), className)}
-        {...props}
-      />
-    );
-  },
-);
-Typography.displayName = "Typography";
+export function Typography({
+  className,
+  variant,
+  as,
+  ...props
+}: TypographyProps) {
+  const Component = as ?? getDefaultElement(variant) ?? "p";
+  return (
+    <Component
+      className={clsx(typographyVariants({ variant }), className)}
+      {...props}
+    />
+  );
+}
 
 function getDefaultElement(
   variant: VariantProps<typeof typographyVariants>["variant"],
@@ -101,5 +102,3 @@ function getDefaultElement(
   }
   return element;
 }
-
-export { Typography, typographyVariants };

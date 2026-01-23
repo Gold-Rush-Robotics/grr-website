@@ -25,7 +25,7 @@ export function EmailDisplay({
       setCopied(true);
       toast.success("Email address copied to clipboard!");
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
+    } catch {
       toast.error("Failed to copy email address");
     }
   };
