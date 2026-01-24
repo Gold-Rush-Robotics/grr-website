@@ -78,9 +78,9 @@ export default function Donate() {
           We&apos;d like to thank our sponsors!
         </Typography>
         <Typography variant="p" className="text-center">
-          Onshape, North Carolina Space Grant
+          Onshape, North Carolina Space Grant, Honeywell
         </Typography>{" "}
-        <div className="mt-8 flex flex-wrap justify-center gap-x-10 gap-y-20">
+        <div className="mt-8 flex flex-wrap justify-center gap-20">
           <SponsorLogo
             src="/logo/svg/onshape/light.svg"
             darkSrc="/logo/svg/onshape/dark.svg"
@@ -91,6 +91,11 @@ export default function Donate() {
             src="/logo/png/ncspacegrant.png"
             name="NC Space Grant"
             href="https://ncspacegrant.ncsu.edu/"
+          />
+          <SponsorLogo
+            src="/logo/svg/honeywell/red.svg"
+            name="Honeywell"
+            href="https://www.honeywell.com/"
           />
           <Card className="h-60 max-w-80">
             <CardHeader>
