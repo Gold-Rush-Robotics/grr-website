@@ -10,9 +10,19 @@ import Navbar from "./_components/navbar";
 import { Typography } from "./_components/typography";
 
 export const metadata: Metadata = {
-  title: "Gold Rush Robotics",
-  description: "Gold Rush Robotics", // TODO: Add description
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  title: "49er Robotics",
+  description: "49er Robotics", // TODO: Add description
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png" },
+    ],
+  },
+  manifest: "/site.webmanifest",
 };
 
 const nunitoSans = Nunito_Sans({
