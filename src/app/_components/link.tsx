@@ -11,7 +11,6 @@ export interface LinkProps extends Omit<
   "href"
 > {
   href?: string;
-  onClick?: () => void;
   noArrow?: boolean;
 }
 
@@ -57,7 +56,12 @@ export function Link({
   }
 
   return (
-    <NextLink href={href} className={linkClasses} {...props}>
+    <NextLink
+      href={href}
+      className={linkClasses}
+      {...props}
+      onClick={onClick}
+    >
       {children}
     </NextLink>
   );

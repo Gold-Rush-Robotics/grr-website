@@ -1,4 +1,6 @@
-import { createCallerFactory, createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
+import { adminRouter } from "@/server/api/routers/admin";
+import { photosRouter } from "./routers/photos";
 
 /**
  * This is the primary router for your server.
@@ -6,10 +8,8 @@ import { createCallerFactory, createTRPCRouter, publicProcedure } from "@/server
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  // There's no api currently and trpc expects this to not be empty 
-  // postRouter is left for reference until I build an API (it came with the template)
-  health_check: publicProcedure.query(() => "ok"),
-  // post: postRouter,
+  admin: adminRouter,
+  photos: photosRouter,
 });
 
 // export type definition of API
