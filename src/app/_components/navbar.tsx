@@ -153,9 +153,9 @@ function MobileNavMenu({
     <Sheet>
       <SheetTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           className={cn(
-            "bg-transparent transition-[border,background-color,color]",
+            "hover:bg-accent-foreground/14 dark:hover:bg-accent-foreground/14 active:bg-accent-foreground/14 focus-visible:bg-accent-foreground/14 border bg-clip-padding px-4 transition-[border] duration-300 ease-linear text-shadow-lg/30",
             opacityBasedStyle,
           )}
           aria-label="Open menu"
@@ -168,7 +168,7 @@ function MobileNavMenu({
         className="bg-background/35 supports-backdrop-filter:bg-background/35 w-80 border-l p-0 backdrop-blur-xl"
         showCloseButton={false}
         style={{
-          backdropFilter: `blur(${Math.max(12, blurAmount)}px)`,
+          backdropFilter: `blur(${Math.max(11, blurAmount)}px)`,
           WebkitBackdropFilter: `blur(${Math.max(12, blurAmount)}px)`,
         }}
       >
