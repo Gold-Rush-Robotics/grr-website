@@ -14,14 +14,28 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ChevronDownIcon, PlusIcon, UploadIcon, XIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { FormEvent, ReactNode } from "react";
 
 export interface UploadDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   files: File[];
   setFiles: (files: File[]) => void;
-  enqueueRaw: (files: File[]) => void;
+  enqueueRaw: (
+    files: {
+      file: File;
+      description?: string;
+      location?: string;
+      takenAt?: Date;
+    }[],
+  ) => void;
 }
 
 export default function UploadDialog({
@@ -31,15 +45,28 @@ export default function UploadDialog({
   setFiles,
   enqueueRaw,
 }: UploadDialogProps) {
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+
+  const validFiles = files.filter(isFileValid);
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const filesToUpload = files.filter(
-      (file) => (file.type.split("/")[0] ?? "") === "image",
-    );
-    if (filesToUpload.length === 0) {
+    if (validFiles.length === 0) {
       return;
     }
-    enqueueRaw(filesToUpload);
+    const trimmedDescription = description.trim();
+    const trimmedLocation = location.trim();
+    enqueueRaw(
+      validFiles.map((file) => ({
+        file,
+        description: trimmedDescription === "" ? undefined : trimmedDescription,
+        location: trimmedLocation === "" ? undefined : trimmedLocation,
+        takenAt: new Date(file.lastModified),
+      })),
+    );
+    setDescription("");
+    setLocation("");
     onOpenChange(false);
   }
 
@@ -47,23 +74,27 @@ export default function UploadDialog({
     const valid = isFileValid(file);
     const invalidColor = valid ? "" : "text-destructive";
     return (
-      <div key={file.name}>
-        <div className="flex items-center justify-between">
-          <Typography className={invalidColor}>{file.name}</Typography>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={() => setFiles(files.filter((f) => f.name !== file.name))}
-          >
-            <XIcon />
-          </Button>
+      <FilePreviewTooltip key={file.name} file={file} valid={valid}>
+        <div>
+          <div className="flex items-center justify-between">
+            <Typography className={invalidColor}>{file.name}</Typography>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={() =>
+                setFiles(files.filter((f) => f.name !== file.name))
+              }
+            >
+              <XIcon />
+            </Button>
+          </div>
+          {!valid && (
+            <Typography className="text-destructive mt-[-8] text-xs">
+              Invalid file type
+            </Typography>
+          )}
         </div>
-        {!valid && (
-          <Typography className="text-destructive mt-[-8] text-xs">
-            Invalid file type
-          </Typography>
-        )}
-      </div>
+      </FilePreviewTooltip>
     );
   });
   return (
@@ -115,9 +146,36 @@ export default function UploadDialog({
                 Remove location from photos?
               </Label>
             </div>
+            <Label htmlFor="photo-description">
+              Description (applies to all photos in this upload)
+            </Label>
+            <Input
+              type="text"
+              id="photo-description"
+              placeholder="Enter a description (optional)"
+              className="w-full"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            <Label htmlFor="photo-location">
+              Location (applies to all photos in this upload)
+            </Label>
+            <Input
+              type="text"
+              id="photo-location"
+              placeholder="Enter a location (optional)"
+              className="w-full"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
 
-            <Button type="submit" className="mt-3 w-full">
-              <UploadIcon /> Upload {files.length} files
+            <Button
+              type="submit"
+              className="mt-3 w-full"
+              disabled={validFiles.length === 0}
+            >
+              <UploadIcon /> Upload {validFiles.length} file
+              {validFiles.length === 1 ? "" : "s"}
             </Button>
           </form>
         </DialogDescription>
@@ -128,4 +186,54 @@ export default function UploadDialog({
 
 function isFileValid(file: File) {
   return (file.type.split("/")[0] ?? "") === "image";
+}
+
+interface FilePreviewTooltipProps {
+  file: File;
+  valid: boolean;
+  children: ReactNode;
+}
+
+function FilePreviewTooltip({
+  file,
+  valid,
+  children,
+}: FilePreviewTooltipProps) {
+  const [previewUrl, setPreviewUrl] = useState<string>();
+
+  useEffect(() => {
+    if (!valid) {
+      setPreviewUrl(undefined);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [file, valid]);
+
+  if (!valid || !previewUrl) {
+    return children;
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent
+        side="right"
+        sideOffset={10}
+        className="bg-popover p-1"
+        arrowClassName="bg-popover fill-popover"
+      >
+        <img
+          src={previewUrl}
+          alt={`Preview of ${file.name}`}
+          className="max-h-56 max-w-56"
+        />
+      </TooltipContent>
+    </Tooltip>
+  );
 }

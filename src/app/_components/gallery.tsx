@@ -2,19 +2,24 @@
 
 import { Typography } from "@/app/_components/typography";
 import { Card } from "@/components/ui/card";
-import { api } from "@/trpc/react";
-import { AlertTriangle, ChevronRight, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { DateTime } from "luxon";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "./link";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
+import { api } from "@/trpc/react";
+import { AlertTriangle, ChevronRight, Loader2, MapPin } from "lucide-react";
+import { DateTime } from "luxon";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { GalleryFullscreen } from "./gallery-fullscreen";
+import { Link } from "./link";
+import {
+  useGalleryPhotoUrl,
+  type SelectedPhoto,
+} from "@/app/_hooks/useGalleryPhotoUrl";
+
+export type { SelectedPhoto };
 
 interface MonthSectionProps {
   month: string;
@@ -25,26 +30,12 @@ interface MonthSectionProps {
 
 interface PhotoPreviewProps {
   src?: string;
+  description?: string | null;
+  location?: string | null;
   index: number;
   loading?: boolean;
   error?: boolean;
   onClick: (index: number) => void;
-}
-
-interface PhotoFullscreenProps {
-  selectedPhoto: SelectedPhoto | null;
-  setSelectedPhoto: (photo: SelectedPhoto | null) => void;
-  photoCounts: PhotoCountItem[];
-}
-
-interface SelectedPhoto {
-  month: string;
-  index: number;
-}
-
-interface PhotoCountItem {
-  month: string;
-  count: number;
 }
 
 function groupPhotoCountsByYear(
@@ -61,9 +52,7 @@ function groupPhotoCountsByYear(
 }
 
 export default function Gallery() {
-  const [selectedPhoto, setSelectedPhoto] = useState<SelectedPhoto | null>(
-    null,
-  );
+  const { selectedPhoto, setSelectedPhoto } = useGalleryPhotoUrl();
 
   const {
     data: photoCounts,
@@ -111,7 +100,7 @@ export default function Gallery() {
         </div>
       </div>
 
-      <PhotoFullscreen
+      <GalleryFullscreen
         selectedPhoto={selectedPhoto}
         setSelectedPhoto={setSelectedPhoto}
         photoCounts={photoCounts}
@@ -280,6 +269,8 @@ function MonthSection({
       <PhotoPreview
         key={i}
         src={photosData?.[i]?.thumbnailUrl}
+        description={photosData?.[i]?.description}
+        location={photosData?.[i]?.location}
         loading={photosLoading || (!canLoad && !photosData)}
         error={!!photosError}
         index={i}
@@ -309,6 +300,8 @@ function MonthSection({
 
 function PhotoPreview({
   src,
+  description,
+  location,
   index,
   loading,
   error,
@@ -334,6 +327,24 @@ function PhotoPreview({
             className="aspect-square h-full w-full object-cover transition duration-200 group-hover:brightness-65"
             loading="lazy"
           />
+          {(description || location) && (
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 space-y-1 bg-gradient-to-b from-transparent to-black/60 to-[2.5rem] p-2 pt-10 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+              {description && (
+                <Typography
+                  variant="small"
+                  className="line-clamp-2 sm:line-clamp-4"
+                >
+                  {description}
+                </Typography>
+              )}
+              {location && (
+                <Typography variant="small" className="line-clamp-1">
+                  <MapPin className="mr-1 inline-block size-3.5" />
+                  {location}
+                </Typography>
+              )}
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex items-center justify-center">
@@ -341,100 +352,5 @@ function PhotoPreview({
         </div>
       )}
     </Card>
-  );
-}
-
-function PhotoFullscreen({
-  selectedPhoto,
-  setSelectedPhoto,
-  photoCounts,
-}: PhotoFullscreenProps) {
-  const {
-    data: monthPhotosData,
-    isLoading: monthPhotosLoading,
-    error: monthPhotosError,
-  } = api.photos.getMonthPhotos.useQuery(
-    { date: selectedPhoto?.month! },
-    { enabled: !!selectedPhoto },
-  );
-
-  const photo = monthPhotosData?.[selectedPhoto?.index ?? 0];
-  const src = photo?.fullResUrl;
-
-  function nextPhoto() {
-    if (!selectedPhoto || !photoCounts) return;
-    const nextIndex = selectedPhoto.index + 1;
-    const currMonthIndex = photoCounts.findIndex(
-      (m) => m.month === selectedPhoto.month,
-    );
-    if (currMonthIndex === -1) return;
-
-    if (nextIndex < photoCounts[currMonthIndex]!.count) {
-      setSelectedPhoto({ month: selectedPhoto.month, index: nextIndex });
-      return;
-    }
-
-    const nextMonth = photoCounts[currMonthIndex + 1]?.month;
-    if (nextMonth) {
-      setSelectedPhoto({ month: nextMonth, index: 0 });
-    }
-  }
-
-  function prevPhoto() {
-    if (!selectedPhoto || !photoCounts) return;
-    const prevIndex = selectedPhoto.index - 1;
-    const currMonthIndex = photoCounts.findIndex(
-      (m) => m.month === selectedPhoto.month,
-    );
-    if (currMonthIndex === -1) return;
-
-    if (prevIndex >= 0) {
-      setSelectedPhoto({ month: selectedPhoto.month, index: prevIndex });
-      return;
-    }
-
-    const prevMonth = photoCounts[currMonthIndex - 1]?.month;
-    if (prevMonth) {
-      setSelectedPhoto({
-        month: prevMonth,
-        index: photoCounts[currMonthIndex - 1]!.count - 1,
-      });
-    }
-  }
-
-  return (
-    <Dialog
-      open={!!selectedPhoto}
-      onOpenChange={(open) => !open && setSelectedPhoto(null)}
-    >
-      <DialogContent
-        className="inline-flex h-auto max-h-[80vh] w-auto max-w-[80vw] items-center justify-center overflow-hidden p-2 sm:max-w-[80vw]"
-        onKeyDown={(e) => {
-          if (e.key === "ArrowRight") {
-            nextPhoto();
-          } else if (e.key === "ArrowLeft") {
-            prevPhoto();
-          }
-        }}
-      >
-        {monthPhotosLoading ? (
-          <div className="flex items-center justify-center">
-            <Loader2 className="size-4 animate-spin" />
-          </div>
-        ) : monthPhotosError ? (
-          <div className="flex items-center justify-center">
-            <AlertTriangle className="size-4" />
-            <Typography className="text-destructive">
-              Failed to load photo
-            </Typography>
-          </div>
-        ) : (
-          <img
-            src={src}
-            className="block h-auto max-h-[calc(80vh-1rem)] w-auto max-w-[calc(80vw-1rem)] object-contain"
-          />
-        )}
-      </DialogContent>
-    </Dialog>
   );
 }

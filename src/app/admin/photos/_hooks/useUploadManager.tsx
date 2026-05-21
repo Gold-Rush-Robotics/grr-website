@@ -46,6 +46,9 @@ export interface UploadQueueItem {
 interface CompressionItem {
   id: string;
   sourceFile: File;
+  description?: string;
+  location?: string;
+  takenAt?: Date;
 }
 
 interface FrozenUploadEstimate {
@@ -241,9 +244,9 @@ export function useUploadManager() {
           thumbnailKey: thumb.key,
           fullResKey: full.key,
           mimeType: fullResFile.type,
-          description: null,
-          location: null,
-          takenAt: new Date(item.sourceFile.lastModified),
+          description: item.description ?? null,
+          location: item.location ?? null,
+          takenAt: item.takenAt ?? new Date(item.sourceFile.lastModified),
         };
 
         uploadQueueRef.current.push(upload);
@@ -352,14 +355,22 @@ export function useUploadManager() {
   }, [runUploadsFromQueue]);
 
   const enqueue = useCallback(
-    (files: File[]) => {
+    (files: {
+      file: File;
+      description?: string;
+      location?: string;
+      takenAt?: Date;
+    }[]) => {
       const valid = files.filter(
-        (f) => (f.type.split("/")[0] ?? "") === "image",
+        (f) => (f.file.type.split("/")[0] ?? "") === "image",
       );
       if (valid.length === 0) return;
-      const items: CompressionItem[] = valid.map((sourceFile) => ({
+      const items: CompressionItem[] = valid.map((entry) => ({
         id: crypto.randomUUID(),
-        sourceFile,
+        sourceFile: entry.file,
+        description: entry.description,
+        location: entry.location,
+        takenAt: entry.takenAt,
       }));
       compressionQueueRef.current.push(...items);
       const wasNewSession = !sessionActiveRef.current;
