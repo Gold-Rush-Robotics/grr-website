@@ -882,6 +882,8 @@ export const PhotoScalarFieldEnum = {
   fullResKey: 'fullResKey',
   description: 'description',
   location: 'location',
+  gpsLat: 'gpsLat',
+  gpsLon: 'gpsLon',
   takenAt: 'takenAt',
   mimeType: 'mimeType',
   createdAt: 'createdAt',
@@ -953,6 +955,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 

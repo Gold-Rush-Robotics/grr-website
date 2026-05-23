@@ -139,6 +139,8 @@ export const PhotoScalarFieldEnum = {
   fullResKey: 'fullResKey',
   description: 'description',
   location: 'location',
+  gpsLat: 'gpsLat',
+  gpsLon: 'gpsLon',
   takenAt: 'takenAt',
   mimeType: 'mimeType',
   createdAt: 'createdAt',

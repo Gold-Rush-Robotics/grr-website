@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
+    "build": "node scripts/prefetch-geonames.mjs && next build",
     "check": "next lint && tsc --noEmit",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
@@ -17,7 +17,7 @@
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "preview": "next build && next start",
+    "preview": "pnpm build && next start",
     "start": "next start",
     "typecheck": "tsc --noEmit"
   },
@@ -42,6 +42,8 @@
     "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "exifr": "^7.1.3",
+    "local-reverse-geocoder": "^0.16.7",
     "lucide-react": "^0.562.0",
     "luxon": "^3.7.2",
     "mime-types": "^3.0.2",

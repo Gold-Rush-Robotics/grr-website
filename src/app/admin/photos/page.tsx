@@ -10,12 +10,14 @@ import { Upload } from "lucide-react";
 import { api } from "@/trpc/react";
 import Gallery from "@/app/_components/gallery";
 import { useUploadManager } from "./_hooks/useUploadManager";
+import { readPhotosWithMetadata } from "@/lib/exif";
+import type { PhotoWithMetadata } from "@/lib/exif";
 
 function hasFiles(event: DragEvent) {
   return Array.from(event.dataTransfer?.types ?? []).includes("Files");
 }
 
-export default function TestPage() {
+export default function PhotosAdminPage() {
   const {
     data: storageData,
     isLoading: storageDataLoading,
@@ -24,10 +26,14 @@ export default function TestPage() {
 
   const [isDragging, setIsDragging] = useState(false);
   const dragDepthRef = useRef(0);
-  const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
+  const [droppedFiles, setDroppedFiles] = useState<PhotoWithMetadata[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { enqueue } = useUploadManager();
+
+  async function setSelectedFiles(files: File[]) {
+    setDroppedFiles(await readPhotosWithMetadata(files));
+  }
 
   useEffect(() => {
     if (!dialogOpen && droppedFiles.length > 0) {
@@ -79,8 +85,9 @@ export default function TestPage() {
       if (!hasFiles(event)) return;
       event.preventDefault();
       clearDragState();
-      setDroppedFiles(Array.from(event.dataTransfer?.files ?? []));
-      setDialogOpen(true);
+      void setSelectedFiles(Array.from(event.dataTransfer?.files ?? [])).then(
+        () => setDialogOpen(true),
+      );
     }
 
     function handleDragEnd() {
@@ -164,13 +171,6 @@ export default function TestPage() {
         <Typography className="text-muted-foreground">
           {photoDataString()} · drag and drop photos to upload
         </Typography>
-        {droppedFiles.length > 0 ? (
-          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
-            Dropped {droppedFiles.length} file
-            {droppedFiles.length === 1 ? "" : "s"}:{" "}
-            {droppedFiles.map((file) => file.name).join(", ")}
-          </div>
-        ) : null}
 
         <Gallery />
 
@@ -179,6 +179,7 @@ export default function TestPage() {
           onOpenChange={setDialogOpen}
           files={droppedFiles}
           setFiles={setDroppedFiles}
+          setSelectedFiles={setSelectedFiles}
           enqueueRaw={enqueue}
         />
 

@@ -8,6 +8,7 @@ import {
   getS3Client,
   getS3ObjectUrl,
 } from "@/server/s3";
+import { reverseGeocode } from "@/server/geocoder";
 import {
   ListObjectsV2Command,
   PutObjectCommand,
@@ -43,6 +44,8 @@ export const photosRouter = createTRPCRouter({
           "fullResKey",
           "description",
           "location",
+          "gpsLat",
+          "gpsLon",
           "takenAt",
           "mimeType",
           "createdAt",
@@ -51,10 +54,10 @@ export const photosRouter = createTRPCRouter({
         WHERE to_char(
           date_trunc(
             'month',
-            "takenAt" AT TIME ZONE ${Prisma.raw(`'${PHOTO_GALLERY_TZ}'`)}
+            "takenAt" AT TIME ZONE ${PHOTO_GALLERY_TZ}
           ),
           'YYYY-MM'
-        ) = ${input.date}
+        ) = ${input.date} /* this isn't sql injectible btw, typescript the goat fr */
         ORDER BY "takenAt" ASC
       `);
       return photos.map((photo) => ({
@@ -118,7 +121,7 @@ export const photosRouter = createTRPCRouter({
         to_char(
           date_trunc(
             'month',
-            "takenAt" AT TIME ZONE ${Prisma.raw(`'${PHOTO_GALLERY_TZ}'`)}
+            "takenAt" AT TIME ZONE ${PHOTO_GALLERY_TZ}
           ),
           'YYYY-MM'
         ) AS month,
@@ -126,7 +129,7 @@ export const photosRouter = createTRPCRouter({
       FROM "Photo"
       GROUP BY date_trunc(
         'month',
-        "takenAt" AT TIME ZONE ${Prisma.raw(`'${PHOTO_GALLERY_TZ}'`)}
+        "takenAt" AT TIME ZONE ${PHOTO_GALLERY_TZ}
       )
       ORDER BY month DESC
     `);
@@ -191,18 +194,31 @@ export const photosRouter = createTRPCRouter({
         mimeType: z.mimeType(),
         description: z.string().optional(),
         location: z.string().optional(),
+        gpsLat: z.number().optional(),
+        gpsLon: z.number().optional(),
         takenAt: z.date(),
       }),
     )
     .mutation(async ({ input }) => {
-      await Promise.all([
-        checkS3KeyExists(input.thumbnailKey),
-        checkS3KeyExists(input.fullResKey),
-      ]).then(([thumbnailExists, fullResExists]) => {
-        if (!thumbnailExists || !fullResExists) {
-          throw new Error("One or more keys do not exist in bucket.");
-        }
-      });
+      const shouldGeocode =
+        !input.location &&
+        typeof input.gpsLat === "number" &&
+        typeof input.gpsLon === "number";
+
+      const [thumbnailExists, fullResExists, geocodedLocation] =
+        await Promise.all([
+          checkS3KeyExists(input.thumbnailKey),
+          checkS3KeyExists(input.fullResKey),
+          shouldGeocode &&
+          typeof input.gpsLat === "number" &&
+          typeof input.gpsLon === "number"
+            ? reverseGeocode(input.gpsLat, input.gpsLon)
+            : Promise.resolve(null),
+        ]);
+
+      if (!thumbnailExists || !fullResExists) {
+        throw new Error("One or more keys do not exist in bucket.");
+      }
 
       await db.photo.create({
         data: {
@@ -210,7 +226,9 @@ export const photosRouter = createTRPCRouter({
           thumbnailKey: input.thumbnailKey,
           fullResKey: input.fullResKey,
           description: input.description,
-          location: input.location,
+          location: input.location ?? geocodedLocation ?? undefined,
+          gpsLat: input.gpsLat,
+          gpsLon: input.gpsLon,
           takenAt: input.takenAt,
           mimeType: input.mimeType,
         },

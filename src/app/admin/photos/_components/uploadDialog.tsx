@@ -19,6 +19,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { PhotoWithMetadata } from "@/lib/exif";
 import { ChevronDownIcon, PlusIcon, UploadIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
@@ -26,13 +27,14 @@ import type { FormEvent, ReactNode } from "react";
 export interface UploadDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  files: File[];
-  setFiles: (files: File[]) => void;
+  files: PhotoWithMetadata[];
+  setFiles: (files: PhotoWithMetadata[]) => void;
+  setSelectedFiles: (files: File[]) => Promise<void>;
   enqueueRaw: (
     files: {
       file: File;
       description?: string;
-      location?: string;
+      location?: string | { lat: number; lon: number };
       takenAt?: Date;
     }[],
   ) => void;
@@ -43,34 +45,51 @@ export default function UploadDialog({
   onOpenChange,
   files,
   setFiles,
+  setSelectedFiles,
   enqueueRaw,
 }: UploadDialogProps) {
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
+  const [usePhotoLocation, setUsePhotoLocation] = useState(true);
 
-  const validFiles = files.filter(isFileValid);
+  const countWithoutLocation = files.filter(
+    ({ metadata }) => metadata.location === undefined,
+  ).length;
+
+  const validFiles = files.filter(({ file }) => isFileValid(file));
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (validFiles.length === 0) {
       return;
     }
-    const trimmedDescription = description.trim();
+    const trimmedDesc = description.trim();
     const trimmedLocation = location.trim();
+    const fallbackLocation =
+      trimmedLocation === "" ? undefined : trimmedLocation;
     enqueueRaw(
-      validFiles.map((file) => ({
-        file,
-        description: trimmedDescription === "" ? undefined : trimmedDescription,
-        location: trimmedLocation === "" ? undefined : trimmedLocation,
-        takenAt: new Date(file.lastModified),
-      })),
+      validFiles.map(({ file, metadata }) => {
+        const resolvedLocation:
+          | string
+          | { lat: number; lon: number }
+          | undefined = usePhotoLocation
+          ? (metadata.location ?? fallbackLocation)
+          : fallbackLocation;
+
+        return {
+          file,
+          description: trimmedDesc === "" ? undefined : trimmedDesc,
+          location: resolvedLocation,
+          takenAt: metadata.takenAt ?? new Date(file.lastModified),
+        };
+      }),
     );
     setDescription("");
     setLocation("");
     onOpenChange(false);
   }
 
-  const fileCompoents = files.map((file) => {
+  const fileCompoents = files.map(({ file }) => {
     const valid = isFileValid(file);
     const invalidColor = valid ? "" : "text-destructive";
     return (
@@ -82,7 +101,7 @@ export default function UploadDialog({
               variant="ghost"
               size="icon-sm"
               onClick={() =>
-                setFiles(files.filter((f) => f.name !== file.name))
+                setFiles(files.filter((f) => f.file.name !== file.name))
               }
             >
               <XIcon />
@@ -104,70 +123,105 @@ export default function UploadDialog({
           <DialogTitle>Upload Photos</DialogTitle>
         </DialogHeader>
         <DialogDescription>
-          <form className="space-y-3" onSubmit={handleSubmit}>
-            <Input
-              id="upload-files"
-              type="file"
-              multiple
-              accept="image/*"
-              className="sr-only"
-              onChange={(e) => {
-                const files = Array.from(e.target.files ?? []);
-                setFiles(files);
-              }}
-            />
-            <div className="flex items-center">
-              <Button asChild type="button" variant="outline">
-                <Label htmlFor="upload-files" className="w-full cursor-pointer">
-                  Browse files.... (or drag and drop)
-                  <PlusIcon className="ml-auto size-4" />
-                </Label>
-              </Button>
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="space-y-3">
+              <Input
+                id="upload-files"
+                type="file"
+                multiple
+                accept="image/*"
+                className="sr-only"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files ?? []);
+                  void setSelectedFiles(files);
+                }}
+              />
+              <div className="flex items-center">
+                <Button asChild type="button" variant="outline">
+                  <Label
+                    htmlFor="upload-files"
+                    className="w-full cursor-pointer"
+                  >
+                    Browse files.... (or drag and drop)
+                    <PlusIcon className="ml-auto size-4" />
+                  </Label>
+                </Button>
+              </div>
+
+              <Collapsible>
+                <CollapsibleTrigger asChild>
+                  <Button variant="outline" className="group w-full">
+                    Selected files ({files.length}){" "}
+                    <ChevronDownIcon className="ml-auto transition-transform group-data-[state=open]:rotate-180" />
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="max-h-[50vh] overflow-y-auto pt-1 pr-1 pl-3">
+                    {fileCompoents}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
             </div>
 
-            <Collapsible>
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" className="group w-full">
-                  Selected files ({files.length}){" "}
-                  <ChevronDownIcon className="ml-auto transition-transform group-data-[state=open]:rotate-180" />
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="pt-1 pr-1 pl-3">{fileCompoents}</div>
-              </CollapsibleContent>
-            </Collapsible>
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="strip-location"
-                className="border-input text-primary focus-visible:ring-ring/50 size-4 rounded border shadow-xs focus-visible:ring-[3px]"
-              />
-              <Label htmlFor="strip-location" className="leading-none">
-                Remove location from photos?
+            <div className="space-y-2">
+              <Label htmlFor="photo-description">
+                Description (applies to all photos in this upload)
               </Label>
+              <Input
+                type="text"
+                id="photo-description"
+                placeholder="Enter a description (optional)"
+                className="w-full"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
             </div>
-            <Label htmlFor="photo-description">
-              Description (applies to all photos in this upload)
-            </Label>
-            <Input
-              type="text"
-              id="photo-description"
-              placeholder="Enter a description (optional)"
-              className="w-full"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <Label htmlFor="photo-location">
-              Location (applies to all photos in this upload)
-            </Label>
-            <Input
-              type="text"
-              id="photo-location"
-              placeholder="Enter a location (optional)"
-              className="w-full"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
+            <div className="space-y-4">
+              {/* Change labels based on toggle */}
+              {!usePhotoLocation && (
+                <div className="space-y-2">
+                  <Label htmlFor="photo-location">
+                    Location (applies to all photos in this upload)
+                  </Label>
+                  <Input
+                    type="text"
+                    id="photo-location"
+                    placeholder="Enter a location (optional)"
+                    className="w-full"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
+                </div>
+              )}
+              {usePhotoLocation && countWithoutLocation > 0 && (
+                <div className="space-y-2">
+                  <Label htmlFor="photo-location">
+                    Location fallback (applies to {countWithoutLocation}{" "}
+                    photo(s) without location metadata)
+                  </Label>
+                  <Input
+                    type="text"
+                    id="photo-location"
+                    placeholder="Enter a location fallback (optional)"
+                    className="w-full"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="use-photo-location"
+                  className="border-input text-primary focus-visible:ring-ring/50 size-4 rounded border shadow-xs focus-visible:ring-[3px]"
+                  checked={usePhotoLocation}
+                  onChange={(e) => setUsePhotoLocation(e.target.checked)}
+                />
+                <Label htmlFor="use-photo-location" className="leading-none">
+                  Use GPS coordinates in photo metadata as locations?
+                </Label>
+              </div>
+            </div>
 
             <Button
               type="submit"
@@ -231,7 +285,7 @@ function FilePreviewTooltip({
         <img
           src={previewUrl}
           alt={`Preview of ${file.name}`}
-          className="max-h-56 max-w-56"
+          className="relative z-10 max-h-56 max-w-56"
         />
       </TooltipContent>
     </Tooltip>

@@ -20,8 +20,20 @@ export type PhotoModel = runtime.Types.Result.DefaultSelection<Prisma.$PhotoPayl
 
 export type AggregatePhoto = {
   _count: PhotoCountAggregateOutputType | null
+  _avg: PhotoAvgAggregateOutputType | null
+  _sum: PhotoSumAggregateOutputType | null
   _min: PhotoMinAggregateOutputType | null
   _max: PhotoMaxAggregateOutputType | null
+}
+
+export type PhotoAvgAggregateOutputType = {
+  gpsLat: number | null
+  gpsLon: number | null
+}
+
+export type PhotoSumAggregateOutputType = {
+  gpsLat: number | null
+  gpsLon: number | null
 }
 
 export type PhotoMinAggregateOutputType = {
@@ -30,6 +42,8 @@ export type PhotoMinAggregateOutputType = {
   fullResKey: string | null
   description: string | null
   location: string | null
+  gpsLat: number | null
+  gpsLon: number | null
   takenAt: Date | null
   mimeType: string | null
   createdAt: Date | null
@@ -42,6 +56,8 @@ export type PhotoMaxAggregateOutputType = {
   fullResKey: string | null
   description: string | null
   location: string | null
+  gpsLat: number | null
+  gpsLon: number | null
   takenAt: Date | null
   mimeType: string | null
   createdAt: Date | null
@@ -54,6 +70,8 @@ export type PhotoCountAggregateOutputType = {
   fullResKey: number
   description: number
   location: number
+  gpsLat: number
+  gpsLon: number
   takenAt: number
   mimeType: number
   createdAt: number
@@ -62,12 +80,24 @@ export type PhotoCountAggregateOutputType = {
 }
 
 
+export type PhotoAvgAggregateInputType = {
+  gpsLat?: true
+  gpsLon?: true
+}
+
+export type PhotoSumAggregateInputType = {
+  gpsLat?: true
+  gpsLon?: true
+}
+
 export type PhotoMinAggregateInputType = {
   id?: true
   thumbnailKey?: true
   fullResKey?: true
   description?: true
   location?: true
+  gpsLat?: true
+  gpsLon?: true
   takenAt?: true
   mimeType?: true
   createdAt?: true
@@ -80,6 +110,8 @@ export type PhotoMaxAggregateInputType = {
   fullResKey?: true
   description?: true
   location?: true
+  gpsLat?: true
+  gpsLon?: true
   takenAt?: true
   mimeType?: true
   createdAt?: true
@@ -92,6 +124,8 @@ export type PhotoCountAggregateInputType = {
   fullResKey?: true
   description?: true
   location?: true
+  gpsLat?: true
+  gpsLon?: true
   takenAt?: true
   mimeType?: true
   createdAt?: true
@@ -137,6 +171,18 @@ export type PhotoAggregateArgs<ExtArgs extends runtime.Types.Extensions.Internal
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: PhotoAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: PhotoSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: PhotoMinAggregateInputType
@@ -167,6 +213,8 @@ export type PhotoGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   _count?: PhotoCountAggregateInputType | true
+  _avg?: PhotoAvgAggregateInputType
+  _sum?: PhotoSumAggregateInputType
   _min?: PhotoMinAggregateInputType
   _max?: PhotoMaxAggregateInputType
 }
@@ -177,11 +225,15 @@ export type PhotoGroupByOutputType = {
   fullResKey: string
   description: string | null
   location: string | null
+  gpsLat: number | null
+  gpsLon: number | null
   takenAt: Date
   mimeType: string
   createdAt: Date
   updatedAt: Date
   _count: PhotoCountAggregateOutputType | null
+  _avg: PhotoAvgAggregateOutputType | null
+  _sum: PhotoSumAggregateOutputType | null
   _min: PhotoMinAggregateOutputType | null
   _max: PhotoMaxAggregateOutputType | null
 }
@@ -210,6 +262,8 @@ export type PhotoWhereInput = {
   fullResKey?: Prisma.StringFilter<"Photo"> | string
   description?: Prisma.StringNullableFilter<"Photo"> | string | null
   location?: Prisma.StringNullableFilter<"Photo"> | string | null
+  gpsLat?: Prisma.FloatNullableFilter<"Photo"> | number | null
+  gpsLon?: Prisma.FloatNullableFilter<"Photo"> | number | null
   takenAt?: Prisma.DateTimeFilter<"Photo"> | Date | string
   mimeType?: Prisma.StringFilter<"Photo"> | string
   createdAt?: Prisma.DateTimeFilter<"Photo"> | Date | string
@@ -222,6 +276,8 @@ export type PhotoOrderByWithRelationInput = {
   fullResKey?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
+  gpsLat?: Prisma.SortOrderInput | Prisma.SortOrder
+  gpsLon?: Prisma.SortOrderInput | Prisma.SortOrder
   takenAt?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -237,6 +293,8 @@ export type PhotoWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.PhotoWhereInput | Prisma.PhotoWhereInput[]
   description?: Prisma.StringNullableFilter<"Photo"> | string | null
   location?: Prisma.StringNullableFilter<"Photo"> | string | null
+  gpsLat?: Prisma.FloatNullableFilter<"Photo"> | number | null
+  gpsLon?: Prisma.FloatNullableFilter<"Photo"> | number | null
   takenAt?: Prisma.DateTimeFilter<"Photo"> | Date | string
   mimeType?: Prisma.StringFilter<"Photo"> | string
   createdAt?: Prisma.DateTimeFilter<"Photo"> | Date | string
@@ -249,13 +307,17 @@ export type PhotoOrderByWithAggregationInput = {
   fullResKey?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
+  gpsLat?: Prisma.SortOrderInput | Prisma.SortOrder
+  gpsLon?: Prisma.SortOrderInput | Prisma.SortOrder
   takenAt?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PhotoCountOrderByAggregateInput
+  _avg?: Prisma.PhotoAvgOrderByAggregateInput
   _max?: Prisma.PhotoMaxOrderByAggregateInput
   _min?: Prisma.PhotoMinOrderByAggregateInput
+  _sum?: Prisma.PhotoSumOrderByAggregateInput
 }
 
 export type PhotoScalarWhereWithAggregatesInput = {
@@ -267,6 +329,8 @@ export type PhotoScalarWhereWithAggregatesInput = {
   fullResKey?: Prisma.StringWithAggregatesFilter<"Photo"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Photo"> | string | null
   location?: Prisma.StringNullableWithAggregatesFilter<"Photo"> | string | null
+  gpsLat?: Prisma.FloatNullableWithAggregatesFilter<"Photo"> | number | null
+  gpsLon?: Prisma.FloatNullableWithAggregatesFilter<"Photo"> | number | null
   takenAt?: Prisma.DateTimeWithAggregatesFilter<"Photo"> | Date | string
   mimeType?: Prisma.StringWithAggregatesFilter<"Photo"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Photo"> | Date | string
@@ -279,6 +343,8 @@ export type PhotoCreateInput = {
   fullResKey: string
   description?: string | null
   location?: string | null
+  gpsLat?: number | null
+  gpsLon?: number | null
   takenAt: Date | string
   mimeType: string
   createdAt?: Date | string
@@ -291,6 +357,8 @@ export type PhotoUncheckedCreateInput = {
   fullResKey: string
   description?: string | null
   location?: string | null
+  gpsLat?: number | null
+  gpsLon?: number | null
   takenAt: Date | string
   mimeType: string
   createdAt?: Date | string
@@ -303,6 +371,8 @@ export type PhotoUpdateInput = {
   fullResKey?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gpsLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  gpsLon?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   takenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -315,6 +385,8 @@ export type PhotoUncheckedUpdateInput = {
   fullResKey?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gpsLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  gpsLon?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   takenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -327,6 +399,8 @@ export type PhotoCreateManyInput = {
   fullResKey: string
   description?: string | null
   location?: string | null
+  gpsLat?: number | null
+  gpsLon?: number | null
   takenAt: Date | string
   mimeType: string
   createdAt?: Date | string
@@ -339,6 +413,8 @@ export type PhotoUpdateManyMutationInput = {
   fullResKey?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gpsLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  gpsLon?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   takenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -351,6 +427,8 @@ export type PhotoUncheckedUpdateManyInput = {
   fullResKey?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gpsLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  gpsLon?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   takenAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -363,10 +441,17 @@ export type PhotoCountOrderByAggregateInput = {
   fullResKey?: Prisma.SortOrder
   description?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  gpsLat?: Prisma.SortOrder
+  gpsLon?: Prisma.SortOrder
   takenAt?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type PhotoAvgOrderByAggregateInput = {
+  gpsLat?: Prisma.SortOrder
+  gpsLon?: Prisma.SortOrder
 }
 
 export type PhotoMaxOrderByAggregateInput = {
@@ -375,6 +460,8 @@ export type PhotoMaxOrderByAggregateInput = {
   fullResKey?: Prisma.SortOrder
   description?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  gpsLat?: Prisma.SortOrder
+  gpsLon?: Prisma.SortOrder
   takenAt?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -387,10 +474,25 @@ export type PhotoMinOrderByAggregateInput = {
   fullResKey?: Prisma.SortOrder
   description?: Prisma.SortOrder
   location?: Prisma.SortOrder
+  gpsLat?: Prisma.SortOrder
+  gpsLon?: Prisma.SortOrder
   takenAt?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type PhotoSumOrderByAggregateInput = {
+  gpsLat?: Prisma.SortOrder
+  gpsLon?: Prisma.SortOrder
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 
@@ -401,6 +503,8 @@ export type PhotoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   fullResKey?: boolean
   description?: boolean
   location?: boolean
+  gpsLat?: boolean
+  gpsLon?: boolean
   takenAt?: boolean
   mimeType?: boolean
   createdAt?: boolean
@@ -413,6 +517,8 @@ export type PhotoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   fullResKey?: boolean
   description?: boolean
   location?: boolean
+  gpsLat?: boolean
+  gpsLon?: boolean
   takenAt?: boolean
   mimeType?: boolean
   createdAt?: boolean
@@ -425,6 +531,8 @@ export type PhotoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   fullResKey?: boolean
   description?: boolean
   location?: boolean
+  gpsLat?: boolean
+  gpsLon?: boolean
   takenAt?: boolean
   mimeType?: boolean
   createdAt?: boolean
@@ -437,13 +545,15 @@ export type PhotoSelectScalar = {
   fullResKey?: boolean
   description?: boolean
   location?: boolean
+  gpsLat?: boolean
+  gpsLon?: boolean
   takenAt?: boolean
   mimeType?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PhotoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "thumbnailKey" | "fullResKey" | "description" | "location" | "takenAt" | "mimeType" | "createdAt" | "updatedAt", ExtArgs["result"]["photo"]>
+export type PhotoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "thumbnailKey" | "fullResKey" | "description" | "location" | "gpsLat" | "gpsLon" | "takenAt" | "mimeType" | "createdAt" | "updatedAt", ExtArgs["result"]["photo"]>
 
 export type $PhotoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Photo"
@@ -454,6 +564,8 @@ export type $PhotoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     fullResKey: string
     description: string | null
     location: string | null
+    gpsLat: number | null
+    gpsLon: number | null
     takenAt: Date
     mimeType: string
     createdAt: Date
@@ -886,6 +998,8 @@ export interface PhotoFieldRefs {
   readonly fullResKey: Prisma.FieldRef<"Photo", 'String'>
   readonly description: Prisma.FieldRef<"Photo", 'String'>
   readonly location: Prisma.FieldRef<"Photo", 'String'>
+  readonly gpsLat: Prisma.FieldRef<"Photo", 'Float'>
+  readonly gpsLon: Prisma.FieldRef<"Photo", 'Float'>
   readonly takenAt: Prisma.FieldRef<"Photo", 'DateTime'>
   readonly mimeType: Prisma.FieldRef<"Photo", 'String'>
   readonly createdAt: Prisma.FieldRef<"Photo", 'DateTime'>

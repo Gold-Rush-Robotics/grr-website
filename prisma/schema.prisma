@@ -73,6 +73,8 @@ model Photo {
 
   description String?
   location    String?
+  gpsLat      Float?
+  gpsLon      Float?
   takenAt     DateTime
   mimeType    String
 

@@ -45,3 +45,6 @@ yarn-error.log*
 
 # idea files
 .idea
+
+# local-reverse-geocoder GeoNames cache
+/.geonames-cache

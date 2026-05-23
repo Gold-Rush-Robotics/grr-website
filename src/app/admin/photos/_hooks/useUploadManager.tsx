@@ -39,7 +39,7 @@ export interface UploadQueueItem {
   fullResKey: string;
   mimeType: string;
   description: string | null;
-  location: string | null;
+  location: string | { lat: number; lon: number } | null;
   takenAt: Date;
 }
 
@@ -47,7 +47,7 @@ interface CompressionItem {
   id: string;
   sourceFile: File;
   description?: string;
-  location?: string;
+  location?: string | { lat: number; lon: number };
   takenAt?: Date;
 }
 
@@ -292,7 +292,12 @@ export function useUploadManager() {
           fullResKey: item.fullResKey,
           mimeType: item.mimeType,
           description: item.description ?? undefined,
-          location: item.location ?? undefined,
+          location:
+            typeof item.location === "string" ? item.location : undefined,
+          gpsLat:
+            typeof item.location === "object" ? item.location?.lat : undefined,
+          gpsLon:
+            typeof item.location === "object" ? item.location?.lon : undefined,
           takenAt: item.takenAt,
         });
         setUploadDone((d) => d + 1);
@@ -355,12 +360,14 @@ export function useUploadManager() {
   }, [runUploadsFromQueue]);
 
   const enqueue = useCallback(
-    (files: {
-      file: File;
-      description?: string;
-      location?: string;
-      takenAt?: Date;
-    }[]) => {
+    (
+      files: {
+        file: File;
+        description?: string;
+        location?: string | { lat: number; lon: number };
+        takenAt?: Date;
+      }[],
+    ) => {
       const valid = files.filter(
         (f) => (f.file.type.split("/")[0] ?? "") === "image",
       );
