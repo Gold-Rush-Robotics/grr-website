@@ -92,7 +92,7 @@ export default function Gallery() {
           </div>
 
           <aside
-            className="sticky top-22 shrink-0 text-right"
+            className="sticky top-22 shrink-0 text-right xl:w-24"
             style={{
               transform: "translateX(max(1.25rem, calc(50vw - 38.75rem)))",
             }}
