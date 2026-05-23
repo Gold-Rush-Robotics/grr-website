@@ -117,20 +117,18 @@ export const photosRouter = createTRPCRouter({
     const countsByMonth = await db.$queryRaw<
       Array<{ month: string; count: number }>
     >(Prisma.sql`
-      SELECT
-        to_char(
+      SELECT month, COUNT(*)::int AS count
+      FROM (
+        SELECT to_char(
           date_trunc(
             'month',
             "takenAt" AT TIME ZONE ${PHOTO_GALLERY_TZ}
           ),
           'YYYY-MM'
-        ) AS month,
-        COUNT(*)::int AS count
-      FROM "Photo"
-      GROUP BY date_trunc(
-        'month',
-        "takenAt" AT TIME ZONE ${PHOTO_GALLERY_TZ}
-      )
+        ) AS month
+        FROM "Photo"
+      ) sub
+      GROUP BY month
       ORDER BY month DESC
     `);
     return countsByMonth;
