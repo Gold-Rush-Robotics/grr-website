@@ -183,19 +183,10 @@ export default function PhotosAdminPage() {
           enqueueRaw={enqueue}
         />
 
-        <div
-          style={{
-            position: "fixed",
-            bottom: 24,
-            right: 24,
-            pointerEvents: "auto",
-          }}
-          className="flex"
-        >
+        <div className="pointer-events-auto fixed right-3 bottom-3 flex">
           <Button
-            variant="default"
             size="icon-lg"
-            className="size-14 rounded-full bg-blue-600 shadow-lg hover:bg-blue-700"
+            className="size-14 rounded-[0.75rem]"
             onClick={() => setDialogOpen(true)}
             aria-label="Upload Files"
           >

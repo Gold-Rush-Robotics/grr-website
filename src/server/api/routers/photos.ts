@@ -58,7 +58,7 @@ export const photosRouter = createTRPCRouter({
           ),
           'YYYY-MM'
         ) = ${input.date} /* this isn't sql injectible btw, typescript the goat fr */
-        ORDER BY "takenAt" ASC
+        ORDER BY "takenAt" DESC
       `);
       return photos.map((photo) => ({
         ...photo,

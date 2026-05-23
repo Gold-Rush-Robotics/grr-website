@@ -79,8 +79,8 @@ export default function Gallery() {
   return (
     <>
       <div className="relative">
-        <div className="flex items-start gap-2">
-          <div className="min-w-0 flex-1 space-y-8">
+        <div className="flex items-start">
+          <div className="-mr-2 min-w-0 flex-1 space-y-8">
             {photoCounts.map((month) => (
               <MonthSection
                 key={month.month}
@@ -92,7 +92,10 @@ export default function Gallery() {
           </div>
 
           <aside
-            className="sticky top-22 mr-[-20] shrink-0 text-right"
+            className="sticky top-22 shrink-0 text-right"
+            style={{
+              transform: "translateX(max(1.25rem, calc(50vw - 38.75rem)))",
+            }}
             aria-label="Jump to month"
           >
             <MonthNavigator photoCounts={photoCounts} />
