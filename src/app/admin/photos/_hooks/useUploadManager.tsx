@@ -261,6 +261,7 @@ export function useUploadManager() {
           `Failed to compress ${item.sourceFile.name}: ${
             (err as Error)?.message ?? "Unknown error"
           }`,
+          { position: "bottom-right", className: "mb-16" },
         );
         setCompressionPeak((p) => Math.max(0, p - 1));
       } finally {
@@ -307,6 +308,7 @@ export function useUploadManager() {
           `Failed to upload ${item.sourceFile.name}: ${
             (err as Error)?.message ?? "Unknown error"
           }`,
+          { position: "bottom-right", className: "mb-16" },
         );
         setUploadPeak((p) => Math.max(0, p - 1));
         setTotalUploadBytes((t) =>
@@ -528,6 +530,8 @@ export function useUploadManager() {
     toast.message(title, {
       id,
       duration: Infinity,
+      position: "bottom-right",
+      className: "mb-16",
       description:
         descriptionLines.length > 0 ? <>{descriptionLines}</> : undefined,
       icon: <CircularProgress fraction={ringFraction} />,
