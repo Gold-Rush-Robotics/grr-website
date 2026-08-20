@@ -11,6 +11,7 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetFooter,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
@@ -20,18 +21,64 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { Profile } from "@/app/admin/_components/profile";
 import { MenuAlt } from "./menu-alt";
 import { Typography } from "./typography";
 
-const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/donate", label: "Donate" },
-  { href: "/history", label: "History" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/contact", label: "Contact" },
-] as const;
+type NavLink = {
+  href: string;
+  label: string;
+};
+
+type NavConfig = {
+  links: NavLink[];
+  actions?: ReactNode;
+};
+
+/**
+ * Navigation config for the navbar.
+ * The key is the root path it will try to match. If no match is found, the
+ * default config will be used. Actions, when provided, render to the right of
+ * the links on desktop and at the bottom of the mobile menu.
+ */
+const NAV_LINKS = {
+  "/admin": {
+    links: [
+      { href: "/admin", label: "Admin Home" },
+      { href: "/admin/social-redirects", label: "Social Redirects" },
+    ],
+    actions: <Profile />,
+  },
+  default: {
+    links: [
+      { href: "/", label: "Home" },
+      { href: "/about", label: "About" },
+      { href: "/donate", label: "Donate" },
+      { href: "/history", label: "History" },
+      { href: "/gallery", label: "Gallery" },
+      { href: "/contact", label: "Contact" },
+    ],
+  },
+} satisfies Record<string, NavConfig>;
+
+/**
+ * Get the navigation config for the given pathname.
+ * The key is the root path it will try to match. If no match is found, the
+ * default config will be used.
+ *
+ * Config defined in NAV_LINKS.
+ */
+function getNavConfig(pathname: string): NavConfig {
+  for (const [rootPath, config] of Object.entries(NAV_LINKS)) {
+    if (rootPath === "default") continue;
+    if (pathname.startsWith(rootPath)) {
+      return config;
+    }
+  }
+
+  return NAV_LINKS.default;
+}
 
 export default function Navbar() {
   const [transparency, setTransparency] = useState(0.3);
@@ -103,6 +150,7 @@ export default function Navbar() {
 
 function NavLinks({ bgOpacity }: { bgOpacity: number }) {
   const pathname = usePathname();
+  const { links, actions } = getNavConfig(pathname);
 
   const opacityBasedStyle =
     bgOpacity < 0.4
@@ -110,28 +158,31 @@ function NavLinks({ bgOpacity }: { bgOpacity: number }) {
       : clsx("border-transparent");
 
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        {NAV_LINKS.map((link) => {
-          const isActive = pathname === link.href;
-          return (
-            <NavigationMenuItem key={link.href}>
-              <NavigationMenuLink
-                asChild
-                className={cn(
-                  "hover:bg-accent-foreground/14 active:bg-accent-foreground/14 focus:bg-accent-foreground/14 border bg-clip-padding px-4 transition-[border] duration-300 ease-linear text-shadow-lg/30",
-                  opacityBasedStyle,
-                  isActive &&
-                    "bg-accent-foreground/14 border-accent-foreground/14",
-                )}
-              >
-                <Link href={link.href}>{link.label}</Link>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          );
-        })}
-      </NavigationMenuList>
-    </NavigationMenu>
+    <div className="flex items-center gap-2">
+      <NavigationMenu>
+        <NavigationMenuList>
+          {links.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <NavigationMenuItem key={link.href}>
+                <NavigationMenuLink
+                  asChild
+                  className={cn(
+                    "hover:bg-accent-foreground/14 active:bg-accent-foreground/14 focus:bg-accent-foreground/14 border bg-clip-padding px-4 transition-[border] duration-300 ease-linear text-shadow-lg/30",
+                    opacityBasedStyle,
+                    isActive &&
+                      "bg-accent-foreground/14 border-accent-foreground/14",
+                  )}
+                >
+                  <Link href={link.href}>{link.label}</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            );
+          })}
+        </NavigationMenuList>
+      </NavigationMenu>
+      {actions}
+    </div>
   );
 }
 
@@ -143,6 +194,7 @@ function MobileNavMenu({
   blurAmount: number;
 }) {
   const pathname = usePathname();
+  const { links, actions } = getNavConfig(pathname);
 
   const opacityBasedStyle =
     bgOpacity < 0.4
@@ -192,7 +244,7 @@ function MobileNavMenu({
           </div>
           <nav className="flex-1 overflow-y-auto p-4">
             <div className="flex flex-col gap-1">
-              {NAV_LINKS.map((link) => {
+              {links.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <SheetClose key={link.href} asChild>
@@ -211,6 +263,7 @@ function MobileNavMenu({
               })}
             </div>
           </nav>
+          {actions ? <SheetFooter className="border-t">{actions}</SheetFooter> : null}
         </div>
       </SheetContent>
     </Sheet>

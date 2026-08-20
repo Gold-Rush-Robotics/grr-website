@@ -7,6 +7,10 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
+    BETTER_AUTH_SECRET: z.string().min(1),
+    DATABASE_URL: z.string().url(),
+    GOOGLE_CLIENT_ID: z.string().min(1),
+    GOOGLE_CLIENT_SECRET: z.string().min(1),
     NODE_ENV: z.enum(["development", "test", "production"]),
   },
 
@@ -24,6 +28,10 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
+    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+    DATABASE_URL: process.env.DATABASE_URL,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     NODE_ENV: process.env.NODE_ENV,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
