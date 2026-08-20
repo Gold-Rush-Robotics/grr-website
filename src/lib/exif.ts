@@ -10,24 +10,36 @@ export interface PhotoWithMetadata {
   metadata: PhotoMetadata;
 }
 
+interface ExifDateData {
+  DateTimeOriginal?: unknown;
+  CreateDate?: unknown;
+  ModifyDate?: unknown;
+}
+
 export async function readPhotoMetadata(file: File): Promise<PhotoMetadata> {
-  const [dateData, gpsData] = await Promise.all([
+  const [rawDateData, gpsData] = await Promise.all([
     exifr
       .parse(file, {
         pick: ["DateTimeOriginal", "CreateDate", "ModifyDate"],
       })
+      .then((value: unknown) => value)
       .catch(() => undefined),
     exifr.gps(file).catch(() => undefined),
   ]);
 
-  const takenAt: Date | undefined =
+  const dateData =
+    typeof rawDateData === "object" && rawDateData !== null
+      ? (rawDateData as ExifDateData)
+      : undefined;
+  const rawTakenAt =
     dateData?.DateTimeOriginal ?? dateData?.CreateDate ?? dateData?.ModifyDate;
+  const takenAt = rawTakenAt instanceof Date ? rawTakenAt : undefined;
 
   const lat = gpsData?.latitude;
   const lon = gpsData?.longitude;
 
   return {
-    takenAt: takenAt instanceof Date ? takenAt : undefined,
+    takenAt,
     location:
       typeof lat === "number" && typeof lon === "number"
         ? { lat, lon }

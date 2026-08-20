@@ -53,7 +53,7 @@ export function GalleryFullscreen({
   const utils = api.useUtils();
   const { data: monthPhotosData, error: monthPhotosError } =
     api.photos.getMonthPhotos.useQuery(
-      { date: selectedPhoto?.month! },
+      { date: selectedPhoto?.month ?? "" },
       { enabled: !!selectedPhoto },
     );
 
@@ -461,7 +461,7 @@ export function GalleryFullscreen({
 
         {/* Caption allows taps for toggling controls; controlClass prevents interaction when hidden. */}
         {currentPhoto &&
-          (currentPhoto.description || currentPhoto.location) && (
+          (currentPhoto.description ?? currentPhoto.location) && (
             <div
               className={cn(
                 "absolute inset-x-0 bottom-0 z-10 space-y-1 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-6 pt-16 pb-6 text-white",

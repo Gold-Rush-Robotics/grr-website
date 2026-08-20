@@ -8,10 +8,10 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -21,8 +21,8 @@ import {
 } from "@/components/ui/tooltip";
 import type { PhotoWithMetadata } from "@/lib/exif";
 import { ChevronDownIcon, PlusIcon, UploadIcon, XIcon } from "lucide-react";
-import { useEffect, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
+import { useEffect, useState } from "react";
 
 export interface UploadDialogProps {
   open: boolean;
@@ -108,7 +108,7 @@ export default function UploadDialog({
             </Button>
           </div>
           {!valid && (
-            <Typography className="text-destructive mt-[-8] text-xs">
+            <Typography className="text-destructive text-xs">
               Invalid file type
             </Typography>
           )}
@@ -206,12 +206,12 @@ export default function UploadDialog({
               </div>
             )}
             <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
+              <Checkbox
                 id="use-photo-location"
-                className="border-input text-primary focus-visible:ring-ring/50 size-4 rounded border shadow-xs focus-visible:ring-[3px]"
                 checked={usePhotoLocation}
-                onChange={(e) => setUsePhotoLocation(e.target.checked)}
+                onCheckedChange={(checked) =>
+                  setUsePhotoLocation(checked === true)
+                }
               />
               <Label htmlFor="use-photo-location" className="leading-none">
                 Use GPS coordinates in photo metadata as locations?

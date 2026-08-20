@@ -327,10 +327,11 @@ function PhotoPreview({
         <div className="relative aspect-square h-full w-full">
           <img
             src={src}
+            alt={description ?? location ?? "Gallery photo"}
             className="aspect-square h-full w-full object-cover transition duration-200 group-hover:brightness-65"
             loading="lazy"
           />
-          {(description || location) && (
+          {(description ?? location) && (
             <div className="pointer-events-none absolute inset-x-0 bottom-0 space-y-1 bg-gradient-to-b from-transparent to-black/60 to-[2.5rem] p-2 pt-10 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
               {description && (
                 <Typography

@@ -91,7 +91,7 @@ model SocialRedirect {
 }
 
 model Photo {
-  id           String @id @unique @default(uuid())
+  id           String @id @default(uuid())
   thumbnailKey String @unique @map("thumbnail_key")
   fullResKey   String @unique @map("full_res_key")
 
@@ -105,7 +105,7 @@ model Photo {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([takenAt, thumbnailKey, fullResKey])
+  @@index([takenAt])
   @@index([mimeType])
   @@map("photos")
 }

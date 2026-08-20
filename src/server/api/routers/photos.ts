@@ -20,6 +20,7 @@ import { extension } from "mime-types";
 import type { Photo } from "@/generated/prisma/client";
 
 const PHOTO_GALLERY_TZ = "America/New_York";
+type PublicPhoto = Omit<Photo, "gpsLat" | "gpsLon">;
 const monthDateSchema = z
   .string()
   .regex(/^\d{4}-(0[1-9]|1[0-2])$/, "Expected YYYY-MM");
@@ -37,15 +38,13 @@ export const photosRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input }) => {
-      const photos = await db.$queryRaw<Photo[]>(Prisma.sql`
+      const photos = await db.$queryRaw<PublicPhoto[]>(Prisma.sql`
         SELECT
           "id",
           "thumbnail_key" AS "thumbnailKey",
           "full_res_key" AS "fullResKey",
           "description",
           "location",
-          "gps_lat" AS "gpsLat",
-          "gps_lon" AS "gpsLon",
           "taken_at" AS "takenAt",
           "mime_type" AS "mimeType",
           "created_at" AS "createdAt",
