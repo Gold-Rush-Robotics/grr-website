@@ -8,79 +8,104 @@ datasource db {
 }
 
 model User {
-  id                 String    @id
-  name               String
-  email              String    @unique
-  emailVerified      Boolean   @default(false)
-  image              String?
-  passwordNeedsReset Boolean   @default(false)
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  accounts           Account[]
-  sessions           Session[]
+  id              String           @id
+  name            String
+  email           String           @unique
+  emailVerified   Boolean          @default(false) @map("email_verified")
+  image           String?
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  accounts        Account[]
+  sessions        Session[]
+  socialRedirects SocialRedirect[]
+
+  @@map("users")
+}
+
+model ApprovedEmail {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("approved_emails")
 }
 
 model Session {
   id        String   @id
-  expiresAt DateTime
+  expiresAt DateTime @map("expires_at")
   token     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@map("sessions")
 }
 
 model Account {
   id                    String    @id
-  accountId             String
-  providerId            String
-  userId                String
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
+  accountId             String    @map("account_id")
+  providerId            String    @map("provider_id")
+  userId                String    @map("user_id")
+  accessToken           String?   @map("access_token")
+  refreshToken          String?   @map("refresh_token")
+  idToken               String?   @map("id_token")
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
   scope                 String?
   password              String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([providerId, accountId])
   @@index([userId])
+  @@map("accounts")
 }
 
 model Verification {
   id         String    @id
   identifier String
   value      String
-  expiresAt  DateTime
-  createdAt  DateTime? @default(now())
-  updatedAt  DateTime? @updatedAt
+  expiresAt  DateTime  @map("expires_at")
+  createdAt  DateTime? @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
 
   @@unique([identifier, value])
+  @@map("verifications")
 }
 
-// Photos
+model SocialRedirect {
+  uri         String   @id
+  redirectUri String   @map("redirect_uri")
+  createdById String   @map("created_by_id")
+  createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([createdById])
+  @@map("social_redirects")
+}
+
 model Photo {
   id           String @id @unique @default(uuid())
-  thumbnailKey String @unique @map("thumbnailKey")
-  fullResKey   String @unique @map("fullResKey")
+  thumbnailKey String @unique @map("thumbnail_key")
+  fullResKey   String @unique @map("full_res_key")
 
   description String?
   location    String?
-  gpsLat      Float?
-  gpsLon      Float?
-  takenAt     DateTime
-  mimeType    String
+  gpsLat      Float?   @map("gps_lat")
+  gpsLon      Float?   @map("gps_lon")
+  takenAt     DateTime @map("taken_at")
+  mimeType    String   @map("mime_type")
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([takenAt, thumbnailKey, fullResKey])
   @@index([mimeType])
+  @@map("photos")
 }

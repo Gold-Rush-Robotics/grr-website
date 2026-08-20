@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type User = Prisma.UserModel
 /**
+ * Model ApprovedEmail
+ * 
+ */
+export type ApprovedEmail = Prisma.ApprovedEmailModel
+/**
  * Model Session
  * 
  */
@@ -37,6 +42,11 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model SocialRedirect
+ * 
+ */
+export type SocialRedirect = Prisma.SocialRedirectModel
 /**
  * Model Photo
  * 

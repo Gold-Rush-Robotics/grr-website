@@ -52,9 +52,11 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  ApprovedEmail: 'ApprovedEmail',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
+  SocialRedirect: 'SocialRedirect',
   Photo: 'Photo'
 } as const
 
@@ -80,12 +82,20 @@ export const UserScalarFieldEnum = {
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
-  passwordNeedsReset: 'passwordNeedsReset',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const ApprovedEmailScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  createdAt: 'createdAt'
+} as const
+
+export type ApprovedEmailScalarFieldEnum = (typeof ApprovedEmailScalarFieldEnum)[keyof typeof ApprovedEmailScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {
@@ -131,6 +141,17 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const SocialRedirectScalarFieldEnum = {
+  uri: 'uri',
+  redirectUri: 'redirectUri',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SocialRedirectScalarFieldEnum = (typeof SocialRedirectScalarFieldEnum)[keyof typeof SocialRedirectScalarFieldEnum]
 
 
 export const PhotoScalarFieldEnum = {

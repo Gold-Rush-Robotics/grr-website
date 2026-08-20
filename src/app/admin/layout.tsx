@@ -1,5 +1,4 @@
 import { getServerSession } from "@/server/auth";
-import { Typography } from "../_components/typography";
 import { Container } from "../_components/container";
 import { SignInCard } from "./_components/sign-in-card";
 
@@ -11,8 +10,7 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
   const session = await getServerSession();
   if (!session) {
     return (
-      <Container className="space-y-6">
-        <Typography variant="h1">Admin Sign In</Typography>
+      <Container className="mt-[20vh] max-w-lg items-center justify-center">
         <SignInCard />
       </Container>
     );

@@ -1,6 +1,7 @@
+import { approvedEmailRouter } from "@/server/api/routers/approved-email";
+import { socialRedirectRouter } from "@/server/api/routers/social-redirect";
+import { photosRouter } from "@/server/api/routers/photos";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
-import { adminRouter } from "@/server/api/routers/admin";
-import { photosRouter } from "./routers/photos";
 
 /**
  * This is the primary router for your server.
@@ -8,8 +9,9 @@ import { photosRouter } from "./routers/photos";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  admin: adminRouter,
+  approvedEmail: approvedEmailRouter,
   photos: photosRouter,
+  socialRedirect: socialRedirectRouter,
 });
 
 // export type definition of API

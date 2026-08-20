@@ -40,25 +40,25 @@ export const photosRouter = createTRPCRouter({
       const photos = await db.$queryRaw<Photo[]>(Prisma.sql`
         SELECT
           "id",
-          "thumbnailKey",
-          "fullResKey",
+          "thumbnail_key" AS "thumbnailKey",
+          "full_res_key" AS "fullResKey",
           "description",
           "location",
-          "gpsLat",
-          "gpsLon",
-          "takenAt",
-          "mimeType",
-          "createdAt",
-          "updatedAt"
-        FROM "Photo"
+          "gps_lat" AS "gpsLat",
+          "gps_lon" AS "gpsLon",
+          "taken_at" AS "takenAt",
+          "mime_type" AS "mimeType",
+          "created_at" AS "createdAt",
+          "updated_at" AS "updatedAt"
+        FROM "photos"
         WHERE to_char(
           date_trunc(
             'month',
-            "takenAt" AT TIME ZONE ${PHOTO_GALLERY_TZ}
+            "taken_at" AT TIME ZONE ${PHOTO_GALLERY_TZ}
           ),
           'YYYY-MM'
         ) = ${input.date} /* this isn't sql injectible btw, typescript the goat fr */
-        ORDER BY "takenAt" DESC
+        ORDER BY "taken_at" DESC
       `);
       return photos.map((photo) => ({
         ...photo,
@@ -74,12 +74,7 @@ export const photosRouter = createTRPCRouter({
    * @returns An object with totalCount and totalBytes fields.
    */
   getStorageData: protectedProcedure.query(async () => {
-    const totalCountResult = await db.$queryRaw<{ count: number }[]>(
-      Prisma.sql`
-        SELECT COUNT(*)::int as count FROM "Photo"
-      `,
-    );
-    const totalCount = totalCountResult[0]?.count ?? 0;
+    const totalCount = await db.photo.count();
 
     const s3Client = getS3Client();
     let continuationToken: string | undefined = undefined;
@@ -122,11 +117,11 @@ export const photosRouter = createTRPCRouter({
         SELECT to_char(
           date_trunc(
             'month',
-            "takenAt" AT TIME ZONE ${PHOTO_GALLERY_TZ}
+            "taken_at" AT TIME ZONE ${PHOTO_GALLERY_TZ}
           ),
           'YYYY-MM'
         ) AS month
-        FROM "Photo"
+        FROM "photos"
       ) sub
       GROUP BY month
       ORDER BY month DESC

@@ -10,6 +10,7 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { auth } from "@/lib/auth";
+import { isApprovedEmail } from "@/server/approved-email";
 
 /**
  * 1. CONTEXT
@@ -108,8 +109,8 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
-const requireAuth = t.middleware(({ ctx, next }) => {
-  if (!ctx.session) {
+const requireAuth = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session || !(await isApprovedEmail(ctx.session.user.email))) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 

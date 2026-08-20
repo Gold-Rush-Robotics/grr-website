@@ -6,12 +6,17 @@ import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
 const config = {
-  // Keep "local-reverse-geocoder" external so its disk cache works correctly in serverless functions
   serverExternalPackages: ["local-reverse-geocoder"],
-
-  // Include GeoNames cache in tRPC serverless function bundle
   outputFileTracingIncludes: {
     "/api/trpc/[trpc]": ["./.geonames-cache/**/*"],
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+    ],
   },
 };
 
