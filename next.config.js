@@ -6,6 +6,10 @@ import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
 const config = {
+  serverExternalPackages: ["local-reverse-geocoder"],
+  outputFileTracingIncludes: {
+    "/api/trpc/[trpc]": ["./.geonames-cache/**/*"],
+  },
   images: {
     remotePatterns: [
       {

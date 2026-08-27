@@ -46,6 +46,7 @@ const NAV_LINKS = {
   "/admin": {
     links: [
       { href: "/admin", label: "Admin Home" },
+      { href: "/admin/photos", label: "Photos" },
       { href: "/admin/social-redirects", label: "Social Redirects" },
     ],
     actions: <Profile />,

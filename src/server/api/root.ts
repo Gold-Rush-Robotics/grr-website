@@ -1,5 +1,6 @@
 import { approvedEmailRouter } from "@/server/api/routers/approved-email";
 import { socialRedirectRouter } from "@/server/api/routers/social-redirect";
+import { photosRouter } from "@/server/api/routers/photos";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
 /**
@@ -9,6 +10,7 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   approvedEmail: approvedEmailRouter,
+  photos: photosRouter,
   socialRedirect: socialRedirectRouter,
 });
 

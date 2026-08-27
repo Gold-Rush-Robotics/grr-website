@@ -89,3 +89,23 @@ model SocialRedirect {
   @@index([createdById])
   @@map("social_redirects")
 }
+
+model Photo {
+  id           String @id @default(uuid())
+  thumbnailKey String @unique @map("thumbnail_key")
+  fullResKey   String @unique @map("full_res_key")
+
+  description String?
+  location    String?
+  gpsLat      Float?   @map("gps_lat")
+  gpsLon      Float?   @map("gps_lon")
+  takenAt     DateTime @map("taken_at")
+  mimeType    String   @map("mime_type")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([takenAt])
+  @@index([mimeType])
+  @@map("photos")
+}
