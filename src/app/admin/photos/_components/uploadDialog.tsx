@@ -1,5 +1,6 @@
 import { Typography } from "@/app/_components/typography";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Collapsible,
   CollapsibleContent,
@@ -11,7 +12,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -89,7 +89,7 @@ export default function UploadDialog({
     onOpenChange(false);
   }
 
-  const fileCompoents = files.map(({ file }) => {
+  const fileComponents = files.map(({ file }) => {
     const valid = isFileValid(file);
     const invalidColor = valid ? "" : "text-destructive";
     return (
@@ -153,7 +153,7 @@ export default function UploadDialog({
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <div className="max-h-[50vh] overflow-y-auto pt-1 pr-1 pl-3">
-                  {fileCompoents}
+                  {fileComponents}
                 </div>
               </CollapsibleContent>
             </Collapsible>

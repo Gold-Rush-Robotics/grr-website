@@ -1,7 +1,6 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Mail } from "lucide-react";
-import Image from "next/image";
 import { Link } from "../../_components/link";
 import { Typography } from "../../_components/typography";
 
@@ -28,7 +27,13 @@ export default function ContactCard({
         {...props}
       >
         <CardContent>
-          <Image src={pfpPath} alt={name} width={100} height={100} />
+          <img
+            src={pfpPath}
+            alt={name}
+            width={100}
+            height={100}
+            className="size-25 object-cover"
+          />
           <Typography variant="h6">{name}</Typography>
           <Typography variant="muted">{title}</Typography>
         </CardContent>
@@ -44,7 +49,13 @@ export default function ContactCard({
         {...props}
       >
         <CardContent className="flex items-center gap-6">
-          <Image src={pfpPath} alt={name} width={100} height={100} />
+          <img
+            src={pfpPath}
+            alt={name}
+            width={100}
+            height={100}
+            className="size-25 object-cover"
+          />
           <div className="flex flex-col gap-1">
             <Typography variant="h6">{name}</Typography>
             <Typography variant="muted">{title}</Typography>

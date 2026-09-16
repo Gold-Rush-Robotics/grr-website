@@ -132,6 +132,8 @@ export const photosRouter = createTRPCRouter({
    * Presigns upload URLs for a given array of files to upload to storage bucket.
    * These URLs are used by the client to upload the files to the bucket.
    * @param input.files - The files to presign upload URLs for.
+   * @param input.files[].purpose - Optional folder for non-gallery uploads
+   * (`officers`). Gallery files omit this and land at the bucket root.
    * @returns The presigned upload URLs for the given files.
    */
   presignUploads: protectedProcedure
@@ -144,6 +146,7 @@ export const photosRouter = createTRPCRouter({
             allowedTopLevelTypes: ["image", "video"],
             message: "Invalid MIME type in at least one file.",
           }),
+          purpose: z.enum(["officers"]).optional(),
         }),
       ),
     )
@@ -151,7 +154,8 @@ export const photosRouter = createTRPCRouter({
       const s3Client = getS3Client();
       const uploads = await Promise.all(
         input.map(async (file) => {
-          const key = `${randomUUID()}.${extension(file.fileType)}`;
+          const fileName = `${randomUUID()}.${extension(file.fileType)}`;
+          const key = file.purpose ? `${file.purpose}/${fileName}` : fileName;
           const command = new PutObjectCommand({
             Bucket: getS3Bucket(),
             Key: key,

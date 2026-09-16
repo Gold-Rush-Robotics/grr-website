@@ -109,3 +109,19 @@ model Photo {
   @@index([mimeType])
   @@map("photos")
 }
+
+/// For list of officers on the Contact page
+model ContactOfficer {
+  id       String  @id @default(uuid())
+  name     String
+  role     String
+  email    String
+  photoKey String? @map("photo_key")
+  position Int
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([position])
+  @@map("contact_officers")
+}

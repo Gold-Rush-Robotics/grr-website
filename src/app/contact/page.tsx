@@ -7,8 +7,11 @@ import { Container } from "../_components/container";
 import { Link } from "../_components/link";
 import ContactCard from "./_components/contact-card";
 import { EmailDisplay } from "./_components/email-display";
+import { api } from "@/trpc/server";
 
 export default async function Contact() {
+  const officers = await api.officers.getAll();
+
   return (
     <>
       <BlobContainer>
@@ -42,29 +45,15 @@ export default async function Contact() {
         <Typography variant="h2">Emails</Typography>
         <EmailDisplay email="goldrushrobotics@charlotte.edu" className="mt-8" />
         <div className="mt-8 grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
-          <ContactCard
-            name="Tyler Eisenbraun"
-            pfpPath="/people/tyler-eisenbraun.jpg"
-            title="President"
-            email="teisenbr@charlotte.edu"
-          />
-          <ContactCard
-            name="Sylvester Pudelko"
-            pfpPath="/people/sylvester-pudelko.jpg"
-            title="Vice President"
-            email="spudelko@charlotte.edu"
-          />
-          <ContactCard
-            name="Justin Chen"
-            pfpPath="/people/justin-chen.jpg"
-            title="Treasurer"
-            email="jchen89@charlotte.edu"
-          />
-          <ContactCard
-            name="Gabrielle Jones"
-            title="Outreach Manager"
-            email="gjones97@charlotte.edu"
-          />
+          {officers.map((officer) => (
+            <ContactCard
+              key={officer.id}
+              name={officer.name}
+              pfpPath={officer.photoUrl ?? undefined}
+              title={officer.role}
+              email={officer.email}
+            />
+          ))}
         </div>
         <Separator />
         <Typography variant="h2">Socials</Typography>
