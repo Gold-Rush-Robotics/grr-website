@@ -403,7 +403,8 @@ export const ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   SocialRedirect: 'SocialRedirect',
-  Photo: 'Photo'
+  Photo: 'Photo',
+  ContactOfficer: 'ContactOfficer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -419,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "approvedEmail" | "session" | "account" | "verification" | "socialRedirect" | "photo"
+    modelProps: "user" | "approvedEmail" | "session" | "account" | "verification" | "socialRedirect" | "photo" | "contactOfficer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -941,6 +942,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ContactOfficer: {
+      payload: Prisma.$ContactOfficerPayload<ExtArgs>
+      fields: Prisma.ContactOfficerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ContactOfficerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactOfficerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ContactOfficerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactOfficerPayload>
+        }
+        findFirst: {
+          args: Prisma.ContactOfficerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactOfficerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ContactOfficerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactOfficerPayload>
+        }
+        findMany: {
+          args: Prisma.ContactOfficerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactOfficerPayload>[]
+        }
+        create: {
+          args: Prisma.ContactOfficerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactOfficerPayload>
+        }
+        createMany: {
+          args: Prisma.ContactOfficerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ContactOfficerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactOfficerPayload>[]
+        }
+        delete: {
+          args: Prisma.ContactOfficerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactOfficerPayload>
+        }
+        update: {
+          args: Prisma.ContactOfficerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactOfficerPayload>
+        }
+        deleteMany: {
+          args: Prisma.ContactOfficerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ContactOfficerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ContactOfficerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactOfficerPayload>[]
+        }
+        upsert: {
+          args: Prisma.ContactOfficerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactOfficerPayload>
+        }
+        aggregate: {
+          args: Prisma.ContactOfficerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateContactOfficer>
+        }
+        groupBy: {
+          args: Prisma.ContactOfficerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContactOfficerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ContactOfficerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContactOfficerCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1073,6 +1148,20 @@ export const PhotoScalarFieldEnum = {
 } as const
 
 export type PhotoScalarFieldEnum = (typeof PhotoScalarFieldEnum)[keyof typeof PhotoScalarFieldEnum]
+
+
+export const ContactOfficerScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  role: 'role',
+  email: 'email',
+  photoKey: 'photoKey',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ContactOfficerScalarFieldEnum = (typeof ContactOfficerScalarFieldEnum)[keyof typeof ContactOfficerScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1325,6 +1414,7 @@ export type GlobalOmitConfig = {
   verification?: Prisma.VerificationOmit
   socialRedirect?: Prisma.SocialRedirectOmit
   photo?: Prisma.PhotoOmit
+  contactOfficer?: Prisma.ContactOfficerOmit
 }
 
 /* Types for Logging */

@@ -57,7 +57,8 @@ export const ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   SocialRedirect: 'SocialRedirect',
-  Photo: 'Photo'
+  Photo: 'Photo',
+  ContactOfficer: 'ContactOfficer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -169,6 +170,20 @@ export const PhotoScalarFieldEnum = {
 } as const
 
 export type PhotoScalarFieldEnum = (typeof PhotoScalarFieldEnum)[keyof typeof PhotoScalarFieldEnum]
+
+
+export const ContactOfficerScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  role: 'role',
+  email: 'email',
+  photoKey: 'photoKey',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ContactOfficerScalarFieldEnum = (typeof ContactOfficerScalarFieldEnum)[keyof typeof ContactOfficerScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -52,3 +52,8 @@ export type SocialRedirect = Prisma.SocialRedirectModel
  * 
  */
 export type Photo = Prisma.PhotoModel
+/**
+ * Model ContactOfficer
+ * For list of officers on the Contact page
+ */
+export type ContactOfficer = Prisma.ContactOfficerModel

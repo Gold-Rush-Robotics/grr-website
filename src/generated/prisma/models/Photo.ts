@@ -299,7 +299,7 @@ export type PhotoWhereUniqueInput = Prisma.AtLeast<{
   mimeType?: Prisma.StringFilter<"Photo"> | string
   createdAt?: Prisma.DateTimeFilter<"Photo"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Photo"> | Date | string
-}, "id" | "id" | "thumbnailKey" | "fullResKey">
+}, "id" | "thumbnailKey" | "fullResKey">
 
 export type PhotoOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

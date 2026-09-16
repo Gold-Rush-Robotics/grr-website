@@ -47,6 +47,7 @@ const NAV_LINKS = {
     links: [
       { href: "/admin", label: "Admin Home" },
       { href: "/admin/photos", label: "Photos" },
+      { href: "/admin/officers", label: "Officers" },
       { href: "/admin/social-redirects", label: "Social Redirects" },
     ],
     actions: <Profile />,
@@ -264,7 +265,9 @@ function MobileNavMenu({
               })}
             </div>
           </nav>
-          {actions ? <SheetFooter className="border-t">{actions}</SheetFooter> : null}
+          {actions ? (
+            <SheetFooter className="border-t">{actions}</SheetFooter>
+          ) : null}
         </div>
       </SheetContent>
     </Sheet>

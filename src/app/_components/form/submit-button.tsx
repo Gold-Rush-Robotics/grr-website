@@ -18,7 +18,7 @@ export function SubmitButton({
         <Button
           {...props}
           type="submit"
-          disabled={!canSubmit || (isSubmitting ?? props.disabled)}
+          disabled={!canSubmit || isSubmitting || props.disabled}
         >
           {isSubmitting && <Spinner />}
           {children}
