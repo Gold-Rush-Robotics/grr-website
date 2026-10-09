@@ -3,7 +3,15 @@
 import { Button, type buttonVariants } from "@/components/ui/button";
 import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
-import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Dialog as DialogPrimitive } from "radix-ui";
+import { ContactForm } from "./contact-form";
 import { LinkButton } from "./link-button";
 
 type SponsorButtonProps = React.ComponentProps<"button"> &
@@ -19,6 +27,7 @@ export function SponsorButton({
   children,
   ...props
 }: SponsorButtonProps) {
+  const [open, setOpen] = React.useState(false);
   if (!children) {
     if (actionType === "sponsor" && action === "redirect") {
       children = "Sponsor Us";
@@ -40,16 +49,31 @@ export function SponsorButton({
   }
 
   return (
-    <Button
-      variant={variant}
-      onClick={() =>
-        toast.info(
-          "This functionality is coming soon! For now, please contact us directly at goldrushrobotics@charlotte.edu",
-        )
-      }
-      {...props}
-    >
-      {children}
-    </Button>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogPrimitive.Trigger asChild>
+        <Button variant={variant} {...props}>
+          {children}
+        </Button>
+      </DialogPrimitive.Trigger>
+      <DialogContent className="max-h-[90dvh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>
+            {actionType === "sponsor"
+              ? "Become a sponsor"
+              : "Arrange a donation"}
+          </DialogTitle>
+          <DialogDescription>
+            Tell us how you would like to support 49er Robotics. We will contact
+            you by email to discuss{" "}
+            {actionType === "sponsor" ? "sponsorship" : "your donation"}.
+          </DialogDescription>
+        </DialogHeader>
+        <ContactForm
+          inquiryType={actionType}
+          embedded
+          onSent={() => setOpen(false)}
+        />
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -27,3 +27,17 @@ You can check out the [create-t3-app GitHub repository](https://github.com/t3-os
 ## How do I deploy this?
 
 Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+
+## Contact and support forms
+
+Contact messages and sponsorship or donation inquiries are sent to Discord using
+`DISCORD_WEBHOOK_URL`. Set this server-only variable in `.env` for local use and
+in the deployment environment for production. The webhook must target a text
+channel, or include `thread_id` in its URL when targeting a forum channel.
+
+The donation form arranges a donation by email. It does not collect payment details.
+Failed submissions keep the visitor's entries so they can retry. If the webhook
+is missing or unavailable, the form shows the club's email address.
+
+Run `pnpm test:forms` to verify input validation and delivery behavior with mocked
+webhook requests. Tests do not post messages to Discord.
