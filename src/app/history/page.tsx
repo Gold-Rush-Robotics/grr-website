@@ -6,7 +6,12 @@ export default async function History() {
     <Container className="space-y-6">
       <Typography variant="h1">History</Typography>
       <Typography variant="p">
-        Gold Rush Robotics has a rich history of excellence and achievement at
+        49er Robotics is a result of the consolidation of two robotics clubs at
+        UNC Charlotte: Gold Rush Robotics and Norm Robotics.
+      </Typography>
+      <Typography variant="h2">History: Gold Rush Robotics</Typography>
+      <Typography variant="p">
+        Gold Rush Robotics had a rich history of excellence and achievement at
         the University of North Carolina at Charlotte. Founded over a decade ago
         in 2009 as Charlotte Area Robotics, AKA CAR, our organization has been a
         driving force in the promotion of STEM education and the development of
@@ -28,13 +33,14 @@ export default async function History() {
       </Typography>
       <Typography variant="p">
         For this event, our team designed a robot capable of retrieving beads
-        from &quot;trees&quot; and storing them in cups or nets, while navigating the
-        course and pushing a marshmallow into an alleyway to earn points. Our
-        team worked collaboratively to meet these complex challenges, showcasing
-        our technical skills and creativity. Despite the difficulties of the
-        competition, we were able to deliver a functioning robot that we are
-        proud of. We believe this project was an excellent opportunity for our
-        members to develop their skills and learn from one another.
+        from &quot;trees&quot; and storing them in cups or nets, while
+        navigating the course and pushing a marshmallow into an alleyway to earn
+        points. Our team worked collaboratively to meet these complex
+        challenges, showcasing our technical skills and creativity. Despite the
+        difficulties of the competition, we were able to deliver a functioning
+        robot that we are proud of. We believe this project was an excellent
+        opportunity for our members to develop their skills and learn from one
+        another.
       </Typography>
       <Typography variant="p">
         During the 2023 season, we would rebrand in order to better reflect the
@@ -47,6 +53,10 @@ export default async function History() {
         human-centered design that emphasized our robotics experience. We
         transplanted our design skills from Onshape into graphic design,
         creating an award winning composition.
+      </Typography>
+      <Typography>
+        In 2025-2026, we would consolidate with UNC Charlotte&apos;s VEX club to
+        form 49er Robotics.
       </Typography>
     </Container>
   );

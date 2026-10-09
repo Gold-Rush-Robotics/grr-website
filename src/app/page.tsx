@@ -47,8 +47,8 @@ export default function Home() {
             Hands-on Experience
           </Typography>
           <Typography variant="muted" className="text-bold">
-            Get real experience—whether it&apos;s making CAD models, designing PCBs,
-            or programming.
+            Get real experience—whether it&apos;s making CAD models, designing
+            PCBs, or programming.
           </Typography>
         </Card>
         <Card className="bg-accent-foreground/7 flex h-full w-full flex-col items-center justify-baseline px-6 text-center">
@@ -112,9 +112,9 @@ export default function Home() {
         </Typography>
         <Typography variant="h1">What We Do</Typography>
         <Typography>
-          In addition to building robots, Gold Rush Robotics focuses on
-          fostering teamwork and skill development, hosting workshops for our
-          broader community, and participating in various interclub and external
+          In addition to building robots, 49er Robotics focuses on fostering
+          teamwork and skill development, hosting workshops for our broader
+          community, and participating in various interclub and external
           competitions.
         </Typography>
       </Container>
