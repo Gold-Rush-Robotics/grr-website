@@ -58,7 +58,7 @@ export default async function Contact() {
         <Separator />
         <Typography variant="h2">Socials</Typography>
         <div className="flex flex-row gap-4">
-          <Link href="https://www.instagram.com/gold_rush_robotics/" noArrow>
+          <Link href="/instagram" external noArrow>
             <Image
               src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/instagram.svg"
               alt="Instagram Logo"
@@ -66,10 +66,7 @@ export default async function Contact() {
               height={60}
             />
           </Link>
-          <Link
-            href="https://ninerengage.charlotte.edu/organization/goldrushrobotics"
-            noArrow
-          >
+          <Link href="/ninerengage" external noArrow>
             <Image
               src="/logo/png/niner-engage.png"
               alt="Niner Engage Logo"

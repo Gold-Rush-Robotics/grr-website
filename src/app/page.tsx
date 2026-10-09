@@ -29,7 +29,7 @@ export default function Home() {
             levels
           </Typography>
           <div className="flex flex-row gap-4">
-            <LinkButton href="https://discord.gg/QzhdcbnSzd">
+            <LinkButton href="/discord" external>
               Discord
             </LinkButton>
             <SponsorButton action="redirect" />
@@ -47,8 +47,8 @@ export default function Home() {
             Hands-on Experience
           </Typography>
           <Typography variant="muted" className="text-bold">
-            Get real experience—whether it&apos;s making CAD models, designing PCBs,
-            or programming.
+            Get real experience—whether it&apos;s making CAD models, designing
+            PCBs, or programming.
           </Typography>
         </Card>
         <Card className="bg-accent-foreground/7 flex h-full w-full flex-col items-center justify-baseline px-6 text-center">
