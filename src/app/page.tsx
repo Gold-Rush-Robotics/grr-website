@@ -112,9 +112,9 @@ export default function Home() {
         </Typography>
         <Typography variant="h1">What We Do</Typography>
         <Typography>
-          In addition to building robots, Gold Rush Robotics focuses on
-          fostering teamwork and skill development, hosting workshops for our
-          broader community, and participating in various interclub and external
+          In addition to building robots, 49er Robotics focuses on fostering
+          teamwork and skill development, hosting workshops for our broader
+          community, and participating in various interclub and external
           competitions.
         </Typography>
       </Container>
