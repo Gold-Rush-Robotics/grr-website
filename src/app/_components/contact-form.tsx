@@ -8,8 +8,8 @@ import { z } from "zod";
 import { Card, CardContent } from "@/components/ui/card";
 import { FieldError, FieldGroup, FieldSet } from "@/components/ui/field";
 import {
-  contactSchema,
   contactFormSchemas,
+  contactSchema,
   sponsorshipQuestions,
   type InquiryType,
 } from "@/lib/contact";
@@ -131,7 +131,7 @@ export function ContactForm({
                 {(field) => (
                   <field.TextareaField
                     label={sponsorshipQuestions.offer}
-                    placeholder="Financial support, products, services, equipment, mentorship, or other support. Please include details."
+                    placeholder="Examples include financial support, products, services, equipment, mentorship, or other support."
                     required
                     maxLength={1000}
                     rows={5}
@@ -142,7 +142,7 @@ export function ContactForm({
                 {(field) => (
                   <field.TextareaField
                     label={sponsorshipQuestions.goals}
-                    placeholder="Tell us about your goals and what you would like from the partnership."
+                    placeholder="Examples include terms/conditions, brand placement, or other questions you may have."
                     required
                     maxLength={1000}
                     rows={5}

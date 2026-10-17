@@ -78,7 +78,6 @@ export function getInquiryDetails(input: Inquiry) {
         ]
       : [
           {
-            name: input.inquiryType === "donate" ? "" : "Message",
             value: input.message,
           },
         ];
