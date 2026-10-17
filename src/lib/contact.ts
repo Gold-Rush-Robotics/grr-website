@@ -78,6 +78,7 @@ export function getInquiryDetails(input: Inquiry) {
         ]
       : [
           {
+            name: "",
             value: input.message,
           },
         ];
