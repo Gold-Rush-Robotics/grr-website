@@ -17,14 +17,13 @@ type DiscordWebhookResult =
 
 export async function sendDiscordWebhook(
   payload: DiscordWebhookPayload,
-  timeout = 5000,
 ): Promise<DiscordWebhookResult> {
   if (!env.DISCORD_WEBHOOK_URL) {
     return { success: false, error: "Webhook is not configured." };
   }
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
   try {
     const url = new URL(env.DISCORD_WEBHOOK_URL);
     url.searchParams.set("with_components", "true");
@@ -65,27 +64,44 @@ function escapeMarkdown(value: string) {
   return value.replace(/[\\`*_{}\[\]()<>#|~]/g, "\\$&");
 }
 
-export function createContactFormMessage(
+export function createContactFormMessages(
   title: string,
   fields: Array<{ name: string; value: string }>,
-  message: string,
-): DiscordWebhookPayload {
-  return {
+  answers: Array<{ name: string; value: string }>,
+): DiscordWebhookPayload[] {
+  const header: TextDisplay[] = [
+    { type: 10, content: `## ${title}` },
+    ...fields.map(
+      ({ name, value }): TextDisplay => ({
+        type: 10,
+        content: `**${escapeMarkdown(name)}:** ${escapeMarkdown(value)}`,
+      }),
+    ),
+  ];
+  const answerBlocks = answers.map(({ name, value }) =>
+    name
+      ? `**${escapeMarkdown(name)}**\n${escapeMarkdown(value)}`
+      : escapeMarkdown(value),
+  );
+  const combined = answerBlocks.join("\n\n");
+  const headerLength = header.reduce(
+    (length, item) => length + item.content.length,
+    0,
+  );
+  // Escaping long answers can exceed Discord's text limit. Keep all answers by
+  // sending separate copies with the same identifying fields when necessary.
+  const bodies =
+    headerLength + combined.length <= 4000 ? [combined] : answerBlocks;
+  return bodies.map((content) => ({
     components: [
       {
         type: 17,
         components: [
-          { type: 10, content: `## ${title}` },
-          ...fields.map(
-            ({ name, value }): TextDisplay => ({
-              type: 10,
-              content: `**${name}:** ${escapeMarkdown(value)}`,
-            }),
-          ),
+          ...header,
           { type: 14, divider: true, spacing: 2 },
-          { type: 10, content: escapeMarkdown(message) },
+          { type: 10, content },
         ],
       },
     ],
-  };
+  }));
 }

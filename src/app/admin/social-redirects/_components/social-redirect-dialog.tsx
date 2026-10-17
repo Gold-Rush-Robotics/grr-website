@@ -1,6 +1,5 @@
 "use client";
 
-import { revalidateLogic } from "@tanstack/react-form";
 import { TriangleAlert } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { z } from "zod";
@@ -54,10 +53,6 @@ export function SocialRedirectDialog({
   const isEditing = Boolean(initialValues);
   const form = useAppForm({
     defaultValues: initialValues ?? { uri: "", redirectUri: "" },
-    validationLogic: revalidateLogic({
-      mode: "blur",
-      modeAfterSubmission: "blur",
-    }),
     validators: { onDynamic: redirectSchema },
     onSubmit: async ({ value }) => {
       setPathExists(await pathConflicts(value.uri));

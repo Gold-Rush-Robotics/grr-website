@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { api } from "@/trpc/react";
-import { revalidateLogic } from "@tanstack/react-form";
 import { UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -63,10 +62,6 @@ export function ApprovedEmailCard({
   );
   const form = useAppForm({
     defaultValues: { email: "" },
-    validationLogic: revalidateLogic({
-      mode: "blur",
-      modeAfterSubmission: "blur",
-    }),
     validators: { onDynamic: emailSchema },
     onSubmit: async ({ value }) => {
       try {

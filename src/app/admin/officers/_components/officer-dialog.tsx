@@ -1,6 +1,5 @@
 "use client";
 
-import { revalidateLogic } from "@tanstack/react-form";
 import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -73,10 +72,6 @@ export function OfficerDialog({
   const isEditing = Boolean(initialValues);
   const form = useAppForm({
     defaultValues: initialValues ?? emptyOfficer,
-    validationLogic: revalidateLogic({
-      mode: "blur",
-      modeAfterSubmission: "blur",
-    }),
     validators: { onDynamic: officerSchema },
     onSubmit: async ({ value }) => {
       setSubmissionError(undefined);

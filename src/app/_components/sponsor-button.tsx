@@ -28,17 +28,8 @@ export function SponsorButton({
   ...props
 }: SponsorButtonProps) {
   const [open, setOpen] = React.useState(false);
-  if (!children) {
-    if (actionType === "sponsor" && action === "redirect") {
-      children = "Sponsor Us";
-    } else if (actionType === "donate" && action === "redirect") {
-      children = "Donate";
-    } else if (actionType === "sponsor" && action === "form") {
-      children = "Become a Sponsor";
-    } else if (actionType === "donate" && action === "form") {
-      children = "Make a Donation";
-    }
-  }
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  children ??= actionType === "donate" ? "Donate" : "Sponsor Us";
 
   if (action === "redirect") {
     return (
@@ -49,7 +40,12 @@ export function SponsorButton({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!isSubmitting) setOpen(nextOpen);
+      }}
+    >
       <DialogPrimitive.Trigger asChild>
         <Button variant={variant} {...props}>
           {children}
@@ -58,19 +54,18 @@ export function SponsorButton({
       <DialogContent className="max-h-[90dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {actionType === "sponsor"
-              ? "Become a sponsor"
-              : "Arrange a donation"}
+            {actionType === "donate" ? "Make a Donation" : "Become a Sponsor"}
           </DialogTitle>
           <DialogDescription>
             Tell us how you would like to support 49er Robotics. We will contact
-            you by email to discuss{" "}
-            {actionType === "sponsor" ? "sponsorship" : "your donation"}.
+            you by email to discuss your{" "}
+            {actionType === "donate" ? "donation" : "sponsorship"}.
           </DialogDescription>
         </DialogHeader>
         <ContactForm
           inquiryType={actionType}
           embedded
+          onPendingChange={setIsSubmitting}
           onSent={() => setOpen(false)}
         />
       </DialogContent>

@@ -12,6 +12,7 @@ export interface LinkProps extends Omit<
 > {
   href?: string;
   noArrow?: boolean;
+  external?: boolean;
 }
 
 export function Link({
@@ -20,9 +21,11 @@ export function Link({
   className,
   children,
   noArrow,
+  external,
   ...props
 }: LinkProps) {
-  const isExternal = href && !href.startsWith("/") && !href.startsWith("#");
+  const isExternal =
+    external ?? Boolean(href && !href.startsWith("/") && !href.startsWith("#"));
 
   const linkClasses = cn(
     "text-secondary underline-offset-4 hover:underline",
@@ -56,12 +59,7 @@ export function Link({
   }
 
   return (
-    <NextLink
-      href={href}
-      className={linkClasses}
-      {...props}
-      onClick={onClick}
-    >
+    <NextLink href={href} className={linkClasses} {...props} onClick={onClick}>
       {children}
     </NextLink>
   );

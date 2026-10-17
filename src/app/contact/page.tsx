@@ -1,5 +1,6 @@
 import { Typography } from "@/app/_components/typography";
 import { Separator } from "@/components/ui/separator";
+import { api } from "@/trpc/server";
 import Image from "next/image";
 import BlobContainer from "../_components/blob-container";
 import { ContactForm } from "../_components/contact-form";
@@ -7,7 +8,6 @@ import { Container } from "../_components/container";
 import { Link } from "../_components/link";
 import ContactCard from "./_components/contact-card";
 import { EmailDisplay } from "./_components/email-display";
-import { api } from "@/trpc/server";
 
 export default async function Contact() {
   const officers = await api.officers.getAll();
@@ -58,7 +58,7 @@ export default async function Contact() {
         <Separator />
         <Typography variant="h2">Socials</Typography>
         <div className="flex flex-row gap-4">
-          <Link href="https://www.instagram.com/gold_rush_robotics/" noArrow>
+          <Link href="/instagram" external noArrow>
             <Image
               src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/instagram.svg"
               alt="Instagram Logo"
@@ -66,10 +66,7 @@ export default async function Contact() {
               height={60}
             />
           </Link>
-          <Link
-            href="https://ninerengage.charlotte.edu/organization/goldrushrobotics"
-            noArrow
-          >
+          <Link href="/ninerengage" external noArrow>
             <Image
               src="/logo/png/niner-engage.png"
               alt="Niner Engage Logo"

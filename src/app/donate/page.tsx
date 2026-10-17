@@ -69,9 +69,9 @@ export default function Donate() {
             <Link>IEEE IRS W9</Link>
           </Typography>
         </div>
-        <div className="flex flex-row gap-4">
-          <SponsorButton action="form" actionType="sponsor" />
-          <SponsorButton action="form" actionType="donate" />
+        <div className="flex flex-wrap gap-4">
+          <SponsorButton actionType="donate" />
+          <SponsorButton />
         </div>
         <Separator />
         <Typography variant="h2" className="text-center" id="sponsors">

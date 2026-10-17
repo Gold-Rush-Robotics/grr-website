@@ -6,7 +6,7 @@ export default function About() {
     <Container className="space-y-6">
       <Typography variant="h1">About</Typography>
       <Typography variant="p">
-        Gold Rush Robotics is a robotics organization at the University of North
+        49er Robotics is a robotics organization at the University of North
         Carolina at Charlotte. We consist of a diverse group of students,
         including multiple majors and backgrounds, all of whom share a passion
         for robotics. Our goal is to provide students with the opportunity to
@@ -20,12 +20,12 @@ export default function About() {
         participating in these programs, our members gain valuable technical and
         leadership skills that will benefit them in their future careers. We
         believe that the future of innovation lies in the hands of young and
-        talented individuals, and by supporting Gold Rush Robotics, you can help
-        us cultivate the next generation of STEM leaders.
+        talented individuals, and by supporting 49er Robotics, you can help us
+        cultivate the next generation of STEM leaders.
       </Typography>
       <Typography variant="p">
-        At Gold Rush Robotics, we are committed to giving back to the community
-        and promoting STEM education in the younger generation. We have had the
+        At 49er Robotics, we are committed to giving back to the community and
+        promoting STEM education in the younger generation. We have had the
         privilege of volunteering at local high school robotics competitions to
         give back to a community we owe everything to. In addition, we hosted a
         one-day high school sumo robot event, where we worked closely with

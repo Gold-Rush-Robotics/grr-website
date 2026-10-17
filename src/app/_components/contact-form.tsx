@@ -1,62 +1,70 @@
 "use client";
 
-import { revalidateLogic } from "@tanstack/react-form";
 import { Send } from "lucide-react";
-import { useId, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { FieldError, FieldGroup, FieldSet } from "@/components/ui/field";
 import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from "@/components/ui/field";
-import { Textarea } from "@/components/ui/textarea";
-import { contactSchema, type InquiryType } from "@/lib/contact";
+  contactSchema,
+  contactFormSchemas,
+  sponsorshipQuestions,
+  type InquiryType,
+} from "@/lib/contact";
 import { api } from "@/trpc/react";
-import { FormFieldErrors } from "./form/field-errors";
 import { useAppForm } from "./form/form";
-
-const formSchema = contactSchema.omit({ inquiryType: true }).extend({
-  organization: contactSchema.shape.organization.removeDefault(),
-});
 
 export function ContactForm({
   inquiryType = "contact",
   embedded = false,
   onSent,
+  onPendingChange,
 }: {
   inquiryType?: InquiryType;
   embedded?: boolean;
   onSent?: () => void;
+  onPendingChange?: (pending: boolean) => void;
 }) {
-  const messageId = useId();
+  const formSchema = z.object({
+    message: z.string(),
+    donationAmount: z.string(),
+    sponsorshipOffer: z.string(),
+    sponsorshipGoals: z.string(),
+    ...contactFormSchemas[inquiryType].shape,
+  });
   const [submissionError, setSubmissionError] = useState<string>();
   const contactMutation = api.contact.contactGeneric.useMutation();
   const form = useAppForm({
-    defaultValues: { name: "", email: "", organization: "", message: "" },
-    validationLogic: revalidateLogic({
-      mode: "blur",
-      modeAfterSubmission: "blur",
-    }),
+    defaultValues: {
+      name: "",
+      email: "",
+      organization: "",
+      message: "",
+      donationAmount: "",
+      sponsorshipOffer: "",
+      sponsorshipGoals: "",
+    },
     validators: { onDynamic: formSchema },
     onSubmit: async ({ value }) => {
       setSubmissionError(undefined);
       try {
-        await contactMutation.mutateAsync({ ...value, inquiryType });
+        onPendingChange?.(true);
+        await contactMutation.mutateAsync(
+          contactSchema.parse({ ...value, inquiryType }),
+        );
         form.reset();
         toast.success(
-          inquiryType === "contact"
-            ? "Message sent successfully."
-            : "Inquiry sent. We will contact you by email.",
+          "Message sent successfully. You should receive a confirmation via email shortly.",
         );
         onSent?.();
       } catch {
         setSubmissionError(
           "Your message could not be sent. Please try again or email goldrushrobotics@charlotte.edu.",
         );
+      } finally {
+        onPendingChange?.(false);
       }
     },
   });
@@ -102,47 +110,63 @@ export function ContactForm({
               )}
             </form.AppField>
           )}
-          <form.Field name="message">
-            {(field) => {
-              const isInvalid =
-                field.state.meta.isBlurred && !field.state.meta.isValid;
-              return (
-                <Field data-invalid={isInvalid || undefined}>
-                  <FieldLabel htmlFor={messageId}>Message</FieldLabel>
-                  <Textarea
-                    id={messageId}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(event) => {
-                      field.handleChange(event.target.value);
-                      if (field.state.meta.isBlurred) {
-                        queueMicrotask(() => void field.validate("blur"));
-                      }
-                    }}
-                    placeholder={
-                      inquiryType === "contact"
-                        ? "How can we help?"
-                        : "Tell us how you would like to support the club."
-                    }
+          {inquiryType === "donate" && (
+            <form.AppField name="donationAmount">
+              {(field) => (
+                <field.TextField
+                  label="Donation Amount (USD)"
+                  type="number"
+                  inputMode="decimal"
+                  min="0.01"
+                  step="0.01"
+                  placeholder="100.00"
+                  required
+                />
+              )}
+            </form.AppField>
+          )}
+          {inquiryType === "sponsor" ? (
+            <>
+              <form.AppField name="sponsorshipOffer">
+                {(field) => (
+                  <field.TextareaField
+                    label={sponsorshipQuestions.offer}
+                    placeholder="Financial support, products, services, equipment, mentorship, or other support. Please include details."
                     required
                     maxLength={1000}
-                    rows={embedded ? 5 : 8}
-                    aria-invalid={isInvalid || undefined}
-                    aria-describedby={
-                      isInvalid ? `${messageId}-error` : undefined
-                    }
+                    rows={5}
                   />
-                  {isInvalid && (
-                    <FormFieldErrors
-                      id={`${messageId}-error`}
-                      errors={field.state.meta.errors}
-                    />
-                  )}
-                </Field>
-              );
-            }}
-          </form.Field>
+                )}
+              </form.AppField>
+              <form.AppField name="sponsorshipGoals">
+                {(field) => (
+                  <field.TextareaField
+                    label={sponsorshipQuestions.goals}
+                    placeholder="Tell us about your goals and what you would like from the partnership."
+                    required
+                    maxLength={1000}
+                    rows={5}
+                  />
+                )}
+              </form.AppField>
+            </>
+          ) : (
+            <form.AppField name="message">
+              {(field) => (
+                <field.TextareaField
+                  label="Message"
+                  placeholder={
+                    inquiryType === "contact"
+                      ? "How can we help?"
+                      : "Tell us about your donation."
+                  }
+                  required
+                  maxLength={1000}
+                  rows={embedded ? 5 : 8}
+                />
+              )}
+            </form.AppField>
+          )}
           {submissionError && (
             <FieldError role="alert">{submissionError}</FieldError>
           )}

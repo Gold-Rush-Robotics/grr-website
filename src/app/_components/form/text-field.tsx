@@ -1,5 +1,6 @@
 "use client";
 
+import { useSelector } from "@tanstack/react-form";
 import type { ComponentProps, ReactNode } from "react";
 
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -28,9 +29,12 @@ export function TextField({
   ...props
 }: TextFieldProps) {
   const field = useFieldContext<string>();
+  const submitAttempted = useSelector(
+    field.form.store,
+    (state) => state.submissionAttempts > 0,
+  );
   const errorId = `${field.name}-error`;
-  const showFieldErrors =
-    field.state.meta.isBlurred && !field.state.meta.isValid;
+  const showFieldErrors = submitAttempted && !field.state.meta.isValid;
   const isInvalid = Boolean(externalError) || showFieldErrors;
 
   return (
@@ -51,13 +55,8 @@ export function TextField({
           }}
           onChange={(event) => {
             const value = event.target.value;
-            const hasBeenBlurred = field.state.meta.isBlurred;
             field.handleChange(value);
             onValueChange?.(value);
-
-            if (hasBeenBlurred) {
-              queueMicrotask(() => void field.validate("blur"));
-            }
           }}
         />
         {trailing}
