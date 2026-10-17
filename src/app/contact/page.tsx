@@ -1,5 +1,6 @@
 import { Typography } from "@/app/_components/typography";
 import { Separator } from "@/components/ui/separator";
+import { api } from "@/trpc/server";
 import Image from "next/image";
 import BlobContainer from "../_components/blob-container";
 import { ContactForm } from "../_components/contact-form";
@@ -7,7 +8,6 @@ import { Container } from "../_components/container";
 import { Link } from "../_components/link";
 import ContactCard from "./_components/contact-card";
 import { EmailDisplay } from "./_components/email-display";
-import { api } from "@/trpc/server";
 
 export default async function Contact() {
   const officers = await api.officers.getAll();

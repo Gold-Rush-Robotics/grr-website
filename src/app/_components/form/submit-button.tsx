@@ -14,13 +14,20 @@ export function SubmitButton({
 
   return (
     <form.Subscribe
-      selector={(state) => [state.canSubmit, state.isSubmitting] as const}
+      selector={(state) =>
+        [state.canSubmit, state.isSubmitting, state.submissionAttempts] as const
+      }
     >
-      {([canSubmit, isSubmitting]) => (
+      {([canSubmit, isSubmitting, submissionAttempts]) => (
         <Button
           {...props}
           type="submit"
-          disabled={!canSubmit || isSubmitting || props.disabled}
+          formNoValidate
+          disabled={
+            isSubmitting ||
+            (submissionAttempts > 0 && !canSubmit) ||
+            props.disabled
+          }
         >
           {isSubmitting && <Spinner />}
           {children}
