@@ -1,2 +1,5 @@
 onlyBuiltDependencies:
   - local-reverse-geocoder
+overrides:
+  # Next.js 15 pins postcss 8.4.31, which has known advisories; use the root postcss version.
+  next>postcss: $postcss

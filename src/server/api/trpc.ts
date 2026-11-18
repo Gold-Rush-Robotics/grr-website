@@ -8,7 +8,7 @@
  */
 import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
-import { ZodError } from "zod";
+import { ZodError, z } from "zod";
 import { auth } from "@/lib/auth";
 import { isApprovedEmail } from "@/server/approved-email";
 
@@ -49,8 +49,11 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       ...shape,
       data: {
         ...shape.data,
+        // Key field errors by name so clients can read zodError.fieldErrors.<field>.
         zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
+          error.cause instanceof ZodError
+            ? z.flattenError(error.cause as ZodError<Record<string, unknown>>)
+            : null,
       },
     };
   },
