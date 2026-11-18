@@ -1,15 +1,11 @@
-import { FlatCompat } from "@eslint/eslintrc";
+import nextVitals from "eslint-config-next/core-web-vitals";
 import tseslint from "typescript-eslint";
-
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-});
 
 export default tseslint.config(
   {
-    ignores: [".next"],
+    ignores: [".next", "src/generated"],
   },
-  ...compat.extends("next/core-web-vitals"),
+  ...nextVitals,
   {
     files: ["**/*.ts", "**/*.tsx"],
     extends: [
@@ -19,6 +15,10 @@ export default tseslint.config(
     ],
     rules: {
       "@next/next/no-img-element": "off",
+      // React Compiler rules added by eslint-plugin-react-hooks 7 (via eslint-config-next 16)
+      // that existing components do not satisfy yet.
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/static-components": "off",
       "@typescript-eslint/array-type": "off",
       "@typescript-eslint/consistent-type-definitions": "off",
       "@typescript-eslint/consistent-type-imports": [

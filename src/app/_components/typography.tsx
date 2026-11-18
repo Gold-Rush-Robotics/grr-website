@@ -98,7 +98,7 @@ function getDefaultElement(
   ) {
     element = "p";
   } else {
-    element = (variant ?? "p") as TypographyElement;
+    element = variant ?? "p";
   }
   return element;
 }
